@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Repository } from '@/lib/github'
 import RepoCard from '@/components/RepoCard'
+import Navigation from '@/components/Navigation'
 
 export default function IndexViewPage() {
   const [repositories, setRepositories] = useState<Repository[]>([])
@@ -42,6 +43,7 @@ export default function IndexViewPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -55,6 +57,7 @@ export default function IndexViewPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <div className="bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-6 max-w-md mx-auto">
@@ -77,6 +80,7 @@ export default function IndexViewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
