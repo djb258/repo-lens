@@ -5,6 +5,8 @@ import { Diagnostics, Altitude, Module, Submodule, Action } from '@/lib/diagnost
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 DEBUG: API route called - fetching repositories')
+    console.log('🔍 DEBUG: Environment check - GITHUB_TOKEN:', process.env.GITHUB_TOKEN ? 'Present' : 'Missing')
+    console.log('🔍 DEBUG: Environment check - GITHUB_USERNAME:', process.env.GITHUB_USERNAME || 'Missing')
     
     // Log API call start
     Diagnostics.success(

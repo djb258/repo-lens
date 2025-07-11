@@ -1,5 +1,9 @@
 // Environment Configuration
 // Centralized configuration for all environment variables
+import dotenv from 'dotenv'
+
+// Load environment variables from .env file
+dotenv.config()
 
 export interface AppConfig {
   github: {
