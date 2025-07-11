@@ -1,0 +1,35 @@
+graph TD
+    A[Repo Lens Repository] --> B[app/]
+    A --> C[components/]
+    A --> D[lib/]
+    A --> E[examples/]
+    A --> F[Configuration Files]
+    
+    B --> B1[page.tsx - Homepage]
+    B --> B2[layout.tsx - Root Layout]
+    B --> B3[globals.css - Global Styles]
+    B --> B4[[repo]/page.tsx - Repo Index]
+    B --> B5[[repo]/[file]/page.tsx - File Detail]
+    B --> B6[api/github-webhook/route.ts - Webhook]
+    
+    C --> C1[RepoCard.tsx - Repository Cards]
+    C --> C2[FileItem.tsx - File/Folder Items]
+    C --> C3[MermaidDiagram.tsx - Diagram Renderer]
+    
+    D --> D1[github.ts - GitHub API Utilities]
+    
+    E --> E1[REPO_WIKI.md - Example Documentation]
+    E --> E2[WIKI_MAP.mmd - Example Diagram]
+    
+    F --> F1[package.json - Dependencies]
+    F --> F2[next.config.js - Next.js Config]
+    F --> F3[tailwind.config.js - Tailwind Config]
+    F --> F4[tsconfig.json - TypeScript Config]
+    F --> F5[vercel.json - Vercel Config]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:1px
+    style C fill:#bbf,stroke:#333,stroke-width:1px
+    style D fill:#bbf,stroke:#333,stroke-width:1px
+    style E fill:#bfb,stroke:#333,stroke-width:1px
+    style F fill:#fbb,stroke:#333,stroke-width:1px 
