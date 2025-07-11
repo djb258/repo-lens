@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run validate:udns && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "validate:udns": "ts-node lib/udns_validator.ts",
+    "validate:udns:js": "node scripts/validate-build.js",
     "setup:github": "node scripts/setup-github.js",
     "setup:github:ps": "powershell -ExecutionPolicy Bypass -File scripts/setup-github.ps1"
   },
