@@ -7,7 +7,15 @@ interface FileItemProps {
 }
 
 export default function FileItem({ file, repoName }: FileItemProps) {
-  const icon = file.type === 'dir' ? '📁' : '📄'
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'dir': return '📁'
+      case 'submodule': return '📦'
+      case 'symlink': return '🔗'
+      default: return '📄'
+    }
+  }
+  const icon = getIcon(file.type)
   const size = file.size ? `${(file.size / 1024).toFixed(1)} KB` : ''
   
   return (

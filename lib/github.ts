@@ -11,7 +11,7 @@ export interface Repository {
   description: string | null
   private: boolean
   html_url: string
-  updated_at: string
+  updated_at: string | null
   language: string | null
   stargazers_count: number
   forks_count: number
@@ -24,7 +24,7 @@ export interface Repository {
 export interface FileContent {
   name: string
   path: string
-  type: 'file' | 'dir'
+  type: 'file' | 'dir' | 'submodule' | 'symlink'
   size?: number
   content?: string
   encoding?: string
@@ -35,7 +35,7 @@ export interface FileContent {
 export interface RepoFile {
   name: string
   path: string
-  type: 'file' | 'dir'
+  type: 'file' | 'dir' | 'submodule' | 'symlink'
   size?: number
   summary?: string
   diagram?: string
