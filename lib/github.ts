@@ -72,6 +72,26 @@ export interface FunctionInfo {
 
 export async function getRepositories(): Promise<Repository[]> {
   try {
+    // Check if GitHub token is available
+    if (!hasGitHubToken) {
+      console.warn('⚠️  GITHUB_TOKEN not found - returning empty repository list')
+      
+      // Log the missing token
+      Diagnostics.warning(
+        Altitude.SERVICE,
+        Module.GITHUB,
+        Submodule.AUTH,
+        Action.FETCH,
+        'GitHub token missing - cannot fetch repositories',
+        { 
+          hasToken: false,
+          suggestion: 'Add GITHUB_TOKEN to environment variables'
+        }
+      )
+      
+      return []
+    }
+
     // Log the start of repository fetch
     Diagnostics.success(
       Altitude.SERVICE,

@@ -114,11 +114,27 @@ export default function IndexViewPage() {
           <div className="text-center py-12">
             <div className="text-4xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No repositories found
+              {repositories.length === 0 && !loading && !error 
+                ? 'GitHub Token Required' 
+                : 'No repositories found'
+              }
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              {searchTerm ? 'Try adjusting your search terms.' : 'No repositories available.'}
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              {repositories.length === 0 && !loading && !error 
+                ? 'To view your repositories, please add your GitHub Personal Access Token to the environment variables.'
+                : searchTerm ? 'Try adjusting your search terms.' : 'No repositories available.'
+              }
             </p>
+            {repositories.length === 0 && !loading && !error && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 max-w-md mx-auto">
+                <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">Setup Instructions:</h4>
+                <ol className="text-sm text-blue-700 dark:text-blue-300 text-left space-y-1">
+                  <li>1. Create a GitHub Personal Access Token</li>
+                  <li>2. Add it to your .env file as GITHUB_TOKEN=your_token_here</li>
+                  <li>3. Restart the development server</li>
+                </ol>
+              </div>
+            )}
           </div>
         )}
 
