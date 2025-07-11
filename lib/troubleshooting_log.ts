@@ -62,7 +62,7 @@ export class TroubleshootingLog {
 
     // Handle YELLOW diagnostics with repeat tracking
     if (severity === Severity.YELLOW) {
-      const entryKey = `${udns}-${event.file || 'unknown'}`
+      const entryKey = `${udns}-${event.module_path || 'unknown'}`
       const existingEntry = this.entries.get(entryKey)
 
       if (existingEntry) {
@@ -86,7 +86,7 @@ export class TroubleshootingLog {
           severity,
           message: event.message,
           timestamp: event.timestamp,
-          file: event.file,
+          file: event.module_path,
           line: event.line_number,
           details: event.details,
           repeatCount: 1,
