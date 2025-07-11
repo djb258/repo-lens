@@ -470,6 +470,12 @@ export function parseRepoName(fullName: string): { owner: string; repo: string }
     'api/', '_next/', '__nextjs_original-stack-frame'
   ]
   
+  // Check for exact matches first
+  if (commonNonRepoRequests.includes(decodedName)) {
+    throw new Error(`Invalid repository format: ${fullName}. This appears to be a system request, not a repository.`)
+  }
+  
+  // Check for partial matches
   if (commonNonRepoRequests.some(req => decodedName.includes(req))) {
     throw new Error(`Invalid repository format: ${fullName}. This appears to be a system request, not a repository.`)
   }
