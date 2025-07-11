@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run validate:udns && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate:udns": "ts-node lib/udns_validator.ts",
+    "setup:github": "node scripts/setup-github.js",
+    "setup:github:ps": "powershell -ExecutionPolicy Bypass -File scripts/setup-github.ps1"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
@@ -24,6 +27,7 @@
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

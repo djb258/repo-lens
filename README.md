@@ -1,350 +1,260 @@
-# 🧠 ORPT Repo Lens Viewer
+# RepoLens - GitHub Repository Explorer
 
-A dynamic zoom-based viewer app that inspects any GitHub repository and renders a structured visual system using the ORPT doctrine (Operating, Repair, Parts, Training). The app follows zoom-level logic (30k → 20k → 10k → 5k) to navigate large or small repos visually and semantically.
+A Next.js application that provides visual and plain-English exploration of GitHub repositories, treating each repo like a "book" with an index, summaries, and diagrams.
 
-## 🔭 ZOOM VIEW MODEL
+## 🏗️ Blueprint ID: BP-039
 
-### 🛰️ Zoom 30k – Repository Index (`/index-view`)
-- **Purpose**: Global repository overview
-- **Features**: 
-  - Searchable list of all accessible GitHub repositories
-  - Repository cards with metadata (stars, forks, language, last updated)
-  - Direct links to repository overview pages
-- **Navigation**: Entry point to the system
+This application implements the **ORBT Doctrine** with universal diagnostic tracking system.
 
-### 🛰️ Zoom 30k – Repository Overview (`/[repo]/overview-view`)
-- **Purpose**: High-level repository documentation
-- **Data Sources**:
-  - `/VISUALS/index.yaml` → High-level list of modules
-  - `/VISUALS/function_doc.md` → Plain English summary
-- **Features**:
-  - Module index with priority indicators
-  - Function documentation display
-  - Architecture overview
-  - Quick action links to other views
-- **Navigation**: Links to diagram view, module list, and troubleshooting
+## 🔍 Universal Diagnostic Tracking (ORBT Doctrine)
 
-### 🛰️ Zoom 30k – Architecture Diagram (`/[repo]/diagram-view`)
-- **Purpose**: Visual system architecture with performance metrics
-- **Data Sources**:
-  - `/VISUALS/overview.mmd` → Mermaid diagram
-  - `/VISUALS/troubleshooting/issue_log.yaml` → Issue data for color coding
-- **Features**:
-  - Enhanced Mermaid diagrams with color-coded nodes
-  - Performance metrics and health scoring
-  - Issue summary with escalation warnings
-  - Interactive node tooltips
-- **Color Coding**:
-  - 🟩 Green: No issues (0 fixes)
-  - 🟨 Yellow: Warning (1 fix)
-  - 🟧 Orange: Critical (2 fixes)
-  - 🟥 Red: Escalated (3+ fixes)
+### Blueprint System
+- **Blueprint ID**: `BP-039` (RepoLens Application)
+- **Assignment**: Automatically assigned at build time
+- **Access**: Available in both frontend and backend code
 
-### ✈️ Zoom 20k – Module List (`/[repo]/module-list-view`)
-- **Purpose**: Detailed module breakdown and analysis
-- **Features**:
-  - Comprehensive module statistics
-  - Health scoring and escalation tracking
-  - Module type categorization (modules, components, files)
-  - Performance metrics per module
-  - Quick access to module details
-- **Navigation**: Links to individual module detail views
+### UDNS (Universal Diagnostic Number System)
+All diagnostic events emit UDNS codes in the format: `ALTITUDE.MODULE.SUBMODULE.ACTION`
 
-### 🛩️ Zoom 10k – Module Detail (`/[repo]/module-detail-view/[moduleId]`)
-- **Purpose**: Individual module analysis and troubleshooting
-- **Data Sources**:
-  - Module-specific issues from `/VISUALS/troubleshooting/issue_log.yaml`
-  - Fix history from `/VISUALS/training/fixes.yaml`
-  - Function documentation from `/VISUALS/function_doc.md`
-- **Features**:
-  - Detailed module description and status
-  - Issue log with timestamps and fix counts
-  - Fixes log with success/failure tracking
-  - Escalation warnings for modules with 3+ fixes
-  - Inline commenting system
-  - "Escalated to Human" badges
+#### Altitude Levels
+- `00` - Ground level (file system, basic operations)
+- `05` - 5k ft (function level detail)
+- `10` - 10k ft (module level operations)
+- `20` - 20k ft (component interactions)
+- `30` - 30k ft (service level operations)
+- `40` - 40k ft (system level operations)
 
-### 🚁 Zoom 20k – Troubleshooting (`/[repo]/troubleshooting-view`)
-- **Purpose**: System-wide issue tracking and escalation management
-- **Features**:
-  - Escalated modules summary
-  - All issues overview with filtering
-  - Recent fixes timeline
-  - Performance statistics
-  - Quick access to problematic modules
+#### Module Categories
+- `UI` - User Interface components
+- `API` - API endpoints and handlers
+- `DATABASE` - Database operations
+- `GITHUB` - GitHub API operations
+- `VISUALS` - Visual file processing
+- `NAVIGATION` - Navigation and routing
+- `AUTH` - Authentication and authorization
+- `PARSER` - File parsing operations
+- `MERMAID` - Mermaid diagram processing
+- `UTILS` - Utility functions
 
-## 📁 VISUALS Folder Structure
+#### Example UDNS Codes
+- `30.GITHUB.repo-fetch.fetch` - GitHub repository fetch operation
+- `20.UI.repo-card.load` - Repository card component loading
+- `10.PARSER.yaml-parse.parse` - YAML file parsing
+- `40.SYSTEM.diagnostic-log.read` - System diagnostic log access
 
-Every repository should include a `/VISUALS` folder with the following structure:
+### Diagnostic Event Format
+```json
+{
+  "blueprint_id": "BP-039",
+  "diagnostic_code": "30.GITHUB.repo-fetch.fetch",
+  "severity": "RED",
+  "status": "FAILED_AUTHENTICATION",
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "message": "GitHub authentication failed",
+  "details": {
+    "status": 401,
+    "owner": "djb258",
+    "repo": "repo-lens"
+  }
+}
+```
 
+### Severity Levels
+- **GREEN** - Success, no issues
+- **YELLOW** - Warning, minor issues
+- **ORANGE** - Critical, multiple issues
+- **RED** - Escalated, human intervention required
+
+### Status Types
+- `SUCCESS` - Operation completed successfully
+- `FAILED_VALIDATION` - Input validation failed
+- `FAILED_AUTHENTICATION` - Authentication/authorization failed
+- `FAILED_FETCH` - Data fetch operation failed
+- `FAILED_PARSE` - Data parsing failed
+- `FAILED_RENDER` - UI rendering failed
+- `TIMEOUT` - Operation timed out
+- `NOT_FOUND` - Resource not found
+- `UNAUTHORIZED` - Access denied
+- `RATE_LIMITED` - API rate limit exceeded
+- `ESCALATED` - Requires human intervention
+
+## 🚀 Features
+
+### Multi-Level Altitude Model
+1. **Global Repo Index (40,000 ft)** - List all repos with cards linking to repo pages
+2. **App Overview (30,000 ft)** - Show plain-English index, repo wiki, Mermaid diagram, and links to modules
+3. **Module View (20,000 ft)** - Show module summary, diagram, exported functions/components, links to function views
+4. **Function View (10,000 ft)** - Show function explanation, code block, control flow or data map
+5. **Optional drill-down (1,000-5,000 ft)** - Detailed logic trees
+
+### Interactive Manual System
+- **Altitude markers** in each Markdown file
+- **Mini-TOC / breadcrumbs** per view
+- **Inline editable comments**
+- **"Fix This" button** to prefill Cursor commands
+- **Outdated doc warning** if code is newer than docs
+
+### ORPT Repo Lens Viewer (Phase 1)
+1. **Page 1 - Repository Index**: List all GitHub repos via API, searchable and clickable
+2. **Page 2 - Repository Overview (30k)**: Load `/VISUALS/index.yaml` and `/VISUALS/function_doc.md`, show module list and summary
+3. **Page 3 - Repository Diagram (30k schematic)**: Render `/VISUALS/overview.mmd` with Mermaid, color code nodes by issue fix counts
+4. **Page 4 - Module Detail (20k → 10k)**: Show raw code, function summary, fixes log, issue summary, visual warnings
+
+### Diagnostic Dashboard
+- **Real-time monitoring** of all diagnostic events
+- **Severity-based filtering** and visualization
+- **Module statistics** and performance metrics
+- **Export functionality** for diagnostic data
+- **Visual overlays** highlighting affected modules
+
+## 📁 File Structure
+
+### Documentation Files
+```
+REPO_WIKI.md          # 30k altitude - Repository overview
+WIKI_MAP.mmd          # 30k altitude - Visual repository map
+MODULE_MAP/
+  [module].mmd        # 20k altitude - Module diagrams
+FUNCTION_SUMMARY/
+  [func].md           # 10k altitude - Function documentation
+```
+
+### ORPT System Files
 ```
 /VISUALS/
-├── index.yaml              # Module index and metadata
-├── function_doc.md         # Plain English documentation
-├── overview.mmd           # Mermaid architecture diagram
-├── troubleshooting/
-│   └── issue_log.yaml     # Issue tracking and escalation data
-└── training/
-    └── fixes.yaml         # Fix history and training data
+  index.yaml          # Module index and metadata
+  function_doc.md     # Function documentation
+  overview.mmd        # Mermaid overview diagram
+/troubleshooting/
+  issue_log.yaml      # Issue tracking and counts
+/training/
+  fixes.yaml          # Fix history and solutions
 ```
 
-### File Formats
-
-#### `index.yaml` - Module Index
-```yaml
-- name: "auth-service"
-  type: "module"
-  description: "User authentication and authorization service"
-  priority: "high"
-  path: "src/services/auth.ts"
-
-- name: "user-component"
-  type: "component"
-  description: "Reusable user profile component"
-  priority: "medium"
-  path: "src/components/User.tsx"
+### Diagnostic System
+```
+lib/
+  diagnostics.ts      # Universal diagnostic tracking
+components/
+  DiagnosticOverlay.tsx   # Visual diagnostic indicators
+  DiagnosticDashboard.tsx # Comprehensive diagnostic view
+app/
+  diagnostics/
+    page.tsx          # Diagnostic dashboard page
 ```
 
-#### `function_doc.md` - Documentation
-```markdown
-# Repository Overview
-
-This repository implements a modern web application with...
-
-## Architecture
-
-The system follows a microservices architecture with...
-
-## Key Components
-
-- Authentication Service
-- User Management
-- API Gateway
-
-## Dependencies
-
-- React 18
-- Node.js 16
-- PostgreSQL
-```
-
-#### `overview.mmd` - Mermaid Diagram
-```mermaid
-graph TD
-    A[Frontend] --> B[API Gateway]
-    B --> C[Auth Service]
-    B --> D[User Service]
-    C --> E[Database]
-    D --> E
-```
-
-#### `troubleshooting/issue_log.yaml` - Issue Tracking
-```yaml
-- moduleName: "auth-service"
-  totalFixes: 2
-  lastUpdated: "2024-01-15T10:30:00Z"
-  issues:
-    - id: "AUTH-001"
-      type: "error"
-      message: "Token validation failing intermittently"
-      status: "resolved"
-      timestamp: "2024-01-10T14:20:00Z"
-      fixCount: 2
-```
-
-#### `training/fixes.yaml` - Fix History
-```yaml
-- moduleId: "auth-service"
-  fixes:
-    - id: "FIX-001"
-      issueId: "AUTH-001"
-      description: "Added retry logic for token validation"
-      appliedBy: "ai-assistant"
-      timestamp: "2024-01-12T09:15:00Z"
-      success: true
-      notes: "Implemented exponential backoff"
-```
-
-## 🚀 Quick Start
+## 🛠️ Setup
 
 ### Prerequisites
 - Node.js 18+ 
 - GitHub Personal Access Token
 
 ### Installation
+```bash
+# Clone the repository
+git clone https://github.com/djb258/repo-lens.git
+cd repo-lens
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/djb258/repo-lens.git
-   cd repo-lens
-   ```
+# Install dependencies
+npm install
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Set up GitHub token
+npm run setup:github
+# Or manually create .env.local with:
+# GITHUB_TOKEN=your_github_token_here
 
-3. **Configure GitHub Token**
-   
-   **Option A: Environment File**
-   ```bash
-   # Create .env.local file
-   echo "GITHUB_TOKEN=your_github_token_here" > .env.local
-   ```
-   
-   **Option B: PowerShell Setup**
-   ```powershell
-   .\setup-github-token.ps1
-   ```
-   
-   **Option C: Bash Setup**
-   ```bash
-   ./setup-github-token.sh
-   ```
-
-4. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
-
-## 🎯 Usage
-
-### Navigation Flow
-
-1. **Start at Index View** (`/index-view`)
-   - Browse all accessible repositories
-   - Use search to find specific repos
-   - Click any repository to zoom in
-
-2. **Repository Overview** (`/[repo]/overview-view`)
-   - View high-level documentation
-   - See module index and architecture
-   - Access quick actions
-
-3. **Architecture Diagram** (`/[repo]/diagram-view`)
-   - Visual system representation
-   - Color-coded performance metrics
-   - Interactive node exploration
-
-4. **Module Analysis** (`/[repo]/module-list-view`)
-   - Detailed module breakdown
-   - Health scoring and statistics
-   - Escalation tracking
-
-5. **Deep Dive** (`/[repo]/module-detail-view/[moduleId]`)
-   - Individual module analysis
-   - Issue and fix history
-   - Escalation warnings
-
-6. **Troubleshooting** (`/[repo]/troubleshooting-view`)
-   - System-wide issue tracking
-   - Escalated modules overview
-   - Performance monitoring
-
-### Interactive Features
-
-- **Search**: Real-time repository filtering
-- **Breadcrumbs**: Clear navigation path
-- **Altitude Markers**: Zoom level indicators
-- **Fix This Buttons**: Pre-filled Cursor commands
-- **Inline Comments**: Add notes to any section
-- **Escalation Warnings**: Automatic issue detection
-
-## 🎨 Color Coding System
-
-### Performance Indicators
-- 🟩 **Green**: Healthy (0 issues)
-- 🟨 **Yellow**: Warning (1 fix)
-- 🟧 **Orange**: Critical (2 fixes)
-- 🟥 **Red**: Escalated (3+ fixes)
-
-### Status Badges
-- **Private**: Repository visibility
-- **Escalated**: Human review required
-- **Priority**: High/Medium/Low indicators
-
-## 🔧 Development
-
-### Project Structure
-```
-app/
-├── index-view/                    # Zoom 30k - Repository index
-├── [repo]/
-│   ├── overview-view/             # Zoom 30k - Repository overview
-│   ├── diagram-view/              # Zoom 30k - Architecture diagram
-│   ├── module-list-view/          # Zoom 20k - Module list
-│   ├── module-detail-view/        # Zoom 10k - Module detail
-│   └── troubleshooting-view/      # Zoom 20k - Troubleshooting
-├── api/
-│   └── github-webhook/            # GitHub webhook handler
-components/                        # Reusable UI components
-lib/                              # Utility functions
-examples/                         # Example VISUALS files
+# Start development server
+npm run dev
 ```
 
-### Key Components
-- `AltitudeMarker`: Zoom level indicators
-- `BreadcrumbNav`: Navigation breadcrumbs
-- `FixThisButton`: Cursor command integration
-- `InlineComment`: Comment system
-- `MermaidDiagram`: Enhanced diagram rendering
-- `RepoCard`: Repository display cards
+### GitHub Token Setup
+The app requires a GitHub Personal Access Token with the following scopes:
+- `repo` - Full control of private repositories
+- `read:user` - Read user profile data
 
-### Environment Variables
-```env
-GITHUB_TOKEN=your_github_personal_access_token
-GITHUB_WEBHOOK_SECRET=your_webhook_secret_optional
+## 🔧 Usage
+
+### Basic Navigation
+1. **Homepage** (`/`) - Repository index with search and filtering
+2. **Repository Overview** (`/[owner]/[repo]`) - High-level repository information
+3. **Module View** (`/[owner]/[repo]/[module]`) - Module-specific details
+4. **Function View** (`/[owner]/[repo]/[module]/[function]`) - Function-level analysis
+5. **Diagnostics** (`/diagnostics`) - Universal diagnostic dashboard
+
+### Diagnostic Monitoring
+- **Real-time tracking** of all application events
+- **Visual indicators** on affected components
+- **Severity-based alerts** and escalation
+- **Export capabilities** for analysis
+- **Centralized logging** (Neon database integration planned)
+
+### ORPT Features
+- **Color-coded diagrams** based on issue counts
+- **Fix history tracking** with escalation warnings
+- **Visual overlays** for problematic modules
+- **Interactive tooltips** with detailed information
+
+## 🎨 Technologies
+
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **Tailwind CSS**
+- **GitHub REST API**
+- **Mermaid.js** (diagrams)
+- **React Markdown** (content rendering)
+- **Universal Diagnostic System** (ORBT Doctrine)
+
+## 📊 Diagnostic Examples
+
+### Authentication Failure
+```
+BP-039::30.GITHUB.auth.fetch - RED - FAILED_AUTHENTICATION - GitHub authentication failed
 ```
 
-## 🚀 Deployment
+### Successful Repository Load
+```
+BP-039::20.UI.repo-card.complete - GREEN - SUCCESS - Successfully loaded 25 repositories
+```
 
-### Vercel Deployment
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
-
-### Environment Setup
-- `GITHUB_TOKEN`: Required for GitHub API access
-- `GITHUB_WEBHOOK_SECRET`: Optional for webhook validation
+### Parse Error
+```
+BP-039::10.PARSER.yaml-parse.parse - ORANGE - FAILED_PARSE - Invalid YAML format in index.yaml
+```
 
 ## 🔮 Future Enhancements
 
 ### Phase 2 Features
-- **Zoom 5k**: Function-level analysis
-- **Real-time Updates**: Live issue tracking
-- **Advanced Search**: Cross-repository analysis
-- **Performance Metrics**: Historical trend analysis
-- **Team Collaboration**: Shared comments and notes
+- **Neon database integration** for centralized logging
+- **Real-time collaboration** features
+- **Advanced visualization** options
+- **Automated issue detection** and resolution
+- **Performance analytics** and optimization
 
-### Advanced Features
-- **AI Integration**: Automated issue detection
-- **Custom Dashboards**: Personalized views
-- **Export Capabilities**: PDF/PNG generation
-- **API Access**: RESTful endpoints
-- **Mobile Support**: Responsive design
+### Diagnostic Enhancements
+- **Machine learning** for pattern recognition
+- **Predictive analytics** for issue prevention
+- **Automated escalation** workflows
+- **Integration with external** monitoring tools
 
-## 📄 License
+## 📝 License
 
-MIT License - see LICENSE file for details
+MIT License - see LICENSE file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
+3. Implement changes with diagnostic tracking
+4. Add tests and documentation
 5. Submit a pull request
 
 ## 📞 Support
 
 For issues and questions:
 - Create an issue on GitHub
-- Check the documentation
-- Review example files in `/examples`
+- Check the diagnostic dashboard for system status
+- Review the ORBT doctrine documentation
 
 ---
 
-**🧠 ORPT Repo Lens Viewer** - Navigate your repositories with precision and insight. 
+**Blueprint BP-039** - RepoLens Application with Universal Diagnostic Tracking 

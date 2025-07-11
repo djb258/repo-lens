@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest'
+import { Diagnostics, Altitude, Module, Submodule, Action, Status } from '@/lib/diagnostics'
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -62,12 +63,84 @@ export interface FunctionInfo {
 
 export async function getRepositories(): Promise<Repository[]> {
   try {
+    // Log the start of repository fetch
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.REPO_FETCH,
+      Action.START,
+      'Starting repository fetch',
+      { per_page: 100, sort: 'updated' }
+    )
+
     const response = await octokit.repos.listForAuthenticatedUser({
       sort: 'updated',
       per_page: 100,
     })
+
+    // Log successful fetch
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.REPO_FETCH,
+      Action.COMPLETE,
+      `Successfully fetched ${response.data.length} repositories`,
+      { 
+        count: response.data.length,
+        rateLimitRemaining: response.headers['x-ratelimit-remaining'],
+        rateLimitReset: response.headers['x-ratelimit-reset']
+      }
+    )
+
     return response.data
-  } catch (error) {
+  } catch (error: any) {
+    // Log authentication failure
+    if (error.status === 401) {
+      Diagnostics.authFailure(
+        Altitude.SERVICE,
+        Module.GITHUB,
+        Submodule.AUTH,
+        Action.FETCH,
+        'GitHub authentication failed - missing or invalid token',
+        { 
+          status: error.status,
+          message: error.message,
+          documentation_url: error.response?.data?.documentation_url
+        }
+      )
+    }
+    // Log rate limiting
+    else if (error.status === 403 && error.response?.headers?.['x-ratelimit-remaining'] === '0') {
+      Diagnostics.warning(
+        Altitude.SERVICE,
+        Module.GITHUB,
+        Submodule.REPO_FETCH,
+        Action.FETCH,
+        'GitHub API rate limit exceeded',
+        { 
+          status: error.status,
+          rateLimitReset: error.response?.headers?.['x-ratelimit-reset'],
+          rateLimitLimit: error.response?.headers?.['x-ratelimit-limit']
+        }
+      )
+    }
+    // Log other errors
+    else {
+      Diagnostics.error(
+        Altitude.SERVICE,
+        Module.GITHUB,
+        Submodule.REPO_FETCH,
+        Action.FETCH,
+        'Failed to fetch repositories from GitHub API',
+        error,
+        { 
+          status: error.status,
+          message: error.message,
+          url: error.request?.url
+        }
+      )
+    }
+
     console.error('Error fetching repositories:', error)
     throw new Error('Failed to fetch repositories')
   }
@@ -75,12 +148,50 @@ export async function getRepositories(): Promise<Repository[]> {
 
 export async function getRepository(owner: string, repo: string): Promise<Repository> {
   try {
+    // Log repository fetch start
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.REPO_FETCH,
+      Action.START,
+      `Starting repository fetch for ${owner}/${repo}`,
+      { owner, repo }
+    )
+
     const response = await octokit.repos.get({
       owner,
       repo,
     })
+
+    // Log successful fetch
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.REPO_FETCH,
+      Action.COMPLETE,
+      `Successfully fetched repository ${owner}/${repo}`,
+      { 
+        owner, 
+        repo,
+        name: response.data.name,
+        language: response.data.language,
+        stars: response.data.stargazers_count
+      }
+    )
+
     return response.data
-  } catch (error) {
+  } catch (error: any) {
+    // Log repository fetch error
+    Diagnostics.error(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.REPO_FETCH,
+      Action.FETCH,
+      `Failed to fetch repository ${owner}/${repo}`,
+      error,
+      { owner, repo, status: error.status }
+    )
+
     console.error('Error fetching repository:', error)
     throw new Error('Failed to fetch repository')
   }
@@ -92,18 +203,53 @@ export async function getRepositoryContents(
   path: string = ''
 ): Promise<FileContent[]> {
   try {
+    // Log contents fetch start
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.CONTENTS,
+      Action.START,
+      `Starting contents fetch for ${owner}/${repo}${path ? `/${path}` : ''}`,
+      { owner, repo, path }
+    )
+
     const response = await octokit.repos.getContent({
       owner,
       repo,
       path,
     })
     
-    if (Array.isArray(response.data)) {
-      return response.data
-    } else {
-      return [response.data]
-    }
-  } catch (error) {
+    const contents = Array.isArray(response.data) ? response.data : [response.data]
+
+    // Log successful fetch
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.CONTENTS,
+      Action.COMPLETE,
+      `Successfully fetched ${contents.length} items from ${owner}/${repo}${path ? `/${path}` : ''}`,
+      { 
+        owner, 
+        repo, 
+        path, 
+        count: contents.length,
+        types: contents.map(item => item.type)
+      }
+    )
+    
+    return contents
+  } catch (error: any) {
+    // Log contents fetch error
+    Diagnostics.error(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.CONTENTS,
+      Action.FETCH,
+      `Failed to fetch contents for ${owner}/${repo}${path ? `/${path}` : ''}`,
+      error,
+      { owner, repo, path, status: error.status }
+    )
+
     console.error('Error fetching repository contents:', error)
     throw new Error('Failed to fetch repository contents')
   }
@@ -115,6 +261,16 @@ export async function getFileContent(
   path: string
 ): Promise<string> {
   try {
+    // Log file content fetch start
+    Diagnostics.success(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.FILE_FETCH,
+      Action.START,
+      `Starting file content fetch for ${owner}/${repo}/${path}`,
+      { owner, repo, path }
+    )
+
     const response = await octokit.repos.getContent({
       owner,
       repo,
@@ -122,11 +278,56 @@ export async function getFileContent(
     })
     
     if ('content' in response.data && response.data.encoding === 'base64') {
-      return Buffer.from(response.data.content, 'base64').toString('utf-8')
+      const content = Buffer.from(response.data.content, 'base64').toString('utf-8')
+
+      // Log successful fetch
+      Diagnostics.success(
+        Altitude.SERVICE,
+        Module.GITHUB,
+        Submodule.FILE_FETCH,
+        Action.COMPLETE,
+        `Successfully fetched file content for ${owner}/${repo}/${path}`,
+        { 
+          owner, 
+          repo, 
+          path, 
+          size: content.length,
+          encoding: response.data.encoding
+        }
+      )
+
+      return content
     }
     
+    // Log invalid content error
+    Diagnostics.parseFailure(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.FILE_FETCH,
+      Action.PARSE,
+      `Invalid file content format for ${owner}/${repo}/${path}`,
+      new Error('Invalid file content'),
+      { 
+        owner, 
+        repo, 
+        path, 
+        encoding: 'content' in response.data ? response.data.encoding : 'unknown'
+      }
+    )
+    
     throw new Error('Invalid file content')
-  } catch (error) {
+  } catch (error: any) {
+    // Log file content fetch error
+    Diagnostics.error(
+      Altitude.SERVICE,
+      Module.GITHUB,
+      Submodule.FILE_FETCH,
+      Action.FETCH,
+      `Failed to fetch file content for ${owner}/${repo}/${path}`,
+      error,
+      { owner, repo, path, status: error.status }
+    )
+
     console.error('Error fetching file content:', error)
     throw new Error('Failed to fetch file content')
   }
@@ -258,9 +459,22 @@ export async function getFunctionInfo(
 }
 
 export function parseRepoName(fullName: string): { owner: string; repo: string } {
-  const parts = fullName.split('/')
-  if (parts.length !== 2) {
-    throw new Error('Invalid repository name format')
+  // Handle URL-encoded repository names
+  const decodedName = decodeURIComponent(fullName)
+  
+  // Split by '/' and handle various formats
+  const parts = decodedName.split('/')
+  
+  if (parts.length === 2) {
+    return { owner: parts[0], repo: parts[1] }
+  } else if (parts.length === 1) {
+    // Handle case where only repo name is provided (use a default owner)
+    return { owner: 'unknown', repo: parts[0] }
+  } else if (parts.length > 2) {
+    // Handle case where there are more than 2 parts (take first and last)
+    return { owner: parts[0], repo: parts[parts.length - 1] }
+  } else {
+    // Fallback for empty or invalid names
+    return { owner: 'unknown', repo: 'unknown' }
   }
-  return { owner: parts[0], repo: parts[1] }
 } 
