@@ -1,0 +1,59 @@
+graph LR
+    %% Components Module Structure (20,000 ft)
+    subgraph "Components Module"
+        A[📦 Components Module<br/>20,000 ft View]
+        
+        subgraph "Core Components"
+            B[AltitudeMarker.tsx<br/>Altitude indicators]
+            C[BreadcrumbNav.tsx<br/>Navigation breadcrumbs]
+            D[InlineComment.tsx<br/>Editable comments]
+            E[FixThisButton.tsx<br/>Cursor commands]
+            F[OutdatedWarning.tsx<br/>Doc warnings]
+        end
+        
+        subgraph "UI Components"
+            G[RepoCard.tsx<br/>Repository cards]
+            H[FileItem.tsx<br/>File/folder items]
+            I[MermaidDiagram.tsx<br/>Diagram renderer]
+        end
+        
+        subgraph "Component Relationships"
+            J[Shared Props<br/>TypeScript interfaces]
+            K[Styling System<br/>Tailwind classes]
+            L[State Management<br/>React hooks]
+        end
+    end
+    
+    %% Connections
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+    A --> I
+    
+    B --> J
+    C --> J
+    D --> J
+    E --> J
+    F --> J
+    
+    G --> K
+    H --> K
+    I --> K
+    
+    D --> L
+    E --> L
+    
+    %% Styling
+    classDef module fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#000
+    classDef core fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff
+    classDef ui fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef system fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
+    
+    class A module
+    class B,C,D,E,F core
+    class G,H,I ui
+    class J,K,L system 

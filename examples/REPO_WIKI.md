@@ -1,59 +1,67 @@
-# Repo Lens - Repository Overview
+# Repo Lens - Repository Overview (30,000 ft)
 
-Repo Lens is a Next.js application that provides a plain-English, visual way to explore GitHub repositories. It treats each repository like a "book" with an index, summaries, and diagrams.
+## 🎯 Purpose
+Repo Lens is an interactive manual system for GitHub repositories that provides visual and narrative exploration at multiple altitude levels. It transforms every repository into a comprehensive service manual with plain-English explanations and visual diagrams.
 
-## Key Components
+## 🏗️ Architecture Overview
+The application follows a multi-level altitude model:
+- **40,000 ft**: Global repository index
+- **30,000 ft**: Repository overview and architecture
+- **20,000 ft**: Module-level documentation
+- **10,000 ft**: Function-level details
+- **1,000-5,000 ft**: Detailed logic trees (future)
 
-### Frontend Structure
-- `app/` - Next.js app router pages and layouts
-- `components/` - Reusable React components
-- `lib/` - Utility functions and GitHub API integration
+## 📁 Core Structure
+```
+Repo Lens/
+├── app/                    # Next.js app router pages
+│   ├── [repo]/            # Repository-specific pages
+│   ├── [module]/          # Module-level views
+│   └── [function]/        # Function-level details
+├── components/            # Reusable UI components
+├── lib/                   # Utilities and API helpers
+└── examples/              # Documentation examples
+```
 
-### Core Features
-- **Repository Browser**: View all accessible GitHub repositories
-- **File Explorer**: Navigate through repository files with summaries
-- **Markdown Rendering**: Display and render markdown content
-- **Mermaid Diagrams**: Visualize repository structure
-- **Dark Mode**: Full dark mode support
+## 🔧 Key Technologies
+- **Next.js 14** with App Router
+- **GitHub REST API** for repository access
+- **Mermaid.js** for visual diagrams
+- **Tailwind CSS** for styling
+- **TypeScript** for type safety
 
-### API Integration
-- GitHub REST API via Octokit
-- Webhook support for real-time updates
-- Secure token-based authentication
+## 🎨 Design Philosophy
+- **Consistent UI**: GitHub-like interface across all levels
+- **Progressive Disclosure**: Information revealed at appropriate altitudes
+- **Interactive Elements**: Comments, fix buttons, and navigation
+- **Visual Documentation**: Diagrams alongside text explanations
 
-## Getting Started
+## 📚 Documentation Structure
+Each repository should contain:
+- `REPO_WIKI.md` - 30,000 ft overview
+- `WIKI_MAP.mmd` - 30,000 ft visual diagram
+- `MODULE_MAP/[module].mmd` - 20,000 ft module diagrams
+- `FUNCTION_SUMMARY/[func].md` - 10,000 ft function docs
 
-1. **Install Dependencies**: `npm install`
-2. **Configure Environment**: Add GitHub token to `.env.local`
-3. **Start Development**: `npm run dev`
-4. **Build for Production**: `npm run build`
+## 🚀 Features
+- ✅ Altitude markers in documentation
+- ✅ Breadcrumb navigation
+- ✅ Inline editable comments
+- ✅ "Fix This" buttons with Cursor commands
+- ✅ Outdated documentation warnings
+- ✅ Mermaid diagram rendering
+- ✅ Responsive design
 
-## File Structure
+## 🔄 Development Workflow
+1. Create repository documentation files
+2. Add altitude markers and visual diagrams
+3. Deploy to Vercel for instant access
+4. Use inline comments for ongoing notes
+5. Monitor outdated documentation warnings
 
-The application follows a clean, modular structure:
-
-- **Pages**: Each route has its own page component
-- **Components**: Reusable UI components with TypeScript
-- **Utilities**: GitHub API helpers and type definitions
-- **Styling**: Tailwind CSS with custom components
-
-## Technology Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript for type safety
-- **Styling**: Tailwind CSS for responsive design
-- **API**: GitHub REST API via Octokit
-- **Diagrams**: Mermaid.js for visualizations
-- **Deployment**: Vercel-ready configuration
-
-## Development Workflow
-
-1. Create feature branch
-2. Implement changes with TypeScript
-3. Test with development server
-4. Build and deploy to Vercel
-5. Monitor webhook events for updates
-
-## Contributing
-
-The project welcomes contributions! Please follow the established patterns and ensure all code is properly typed with TypeScript. 
+## 🎯 Use Cases
+- **Onboarding**: New team members understanding codebases
+- **Maintenance**: Quick reference for system architecture
+- **Documentation**: Living documentation that stays current
+- **Code Reviews**: Context-aware review assistance
+- **Troubleshooting**: Multi-level problem diagnosis 

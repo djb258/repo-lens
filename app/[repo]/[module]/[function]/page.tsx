@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { parseRepoName, getRepository, getFileContent } from '@/lib/github'
+import { parseRepoName, getRepository, getFileContent, getFunctionInfo } from '@/lib/github'
 import MermaidDiagram from '@/components/MermaidDiagram'
+import AltitudeMarker from '@/components/AltitudeMarker'
+import BreadcrumbNav from '@/components/BreadcrumbNav'
+import InlineComment from '@/components/InlineComment'
+import FixThisButton from '@/components/FixThisButton'
+import OutdatedWarning from '@/components/OutdatedWarning'
 
 interface FunctionPageProps {
   params: {
@@ -18,9 +23,10 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
     const functionPath = params.function.join('/')
     const fullPath = `${modulePath}/${functionPath}`
     
-    const [repository, fileContent] = await Promise.all([
+    const [repository, fileContent, functionInfo] = await Promise.all([
       getRepository(owner, repo),
-      getFileContent(owner, repo, fullPath)
+      getFileContent(owner, repo, fullPath),
+      getFunctionInfo(owner, repo, fullPath)
     ])
 
     const isMarkdown = functionPath.endsWith('.md') || functionPath.endsWith('.markdown')
@@ -29,15 +35,17 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
 
     // Try to find function-specific documentation
     const functionName = params.function[params.function.length - 1].replace(/\.[^/.]+$/, '')
-    let functionSummary = ''
+    let functionSummary = functionInfo.summary || ''
     let functionDiagram = ''
     
-    // Look for function summary in FUNCTION_SUMMARY directory
-    try {
-      const summaryPath = `${modulePath}/FUNCTION_SUMMARY/${functionName}.md`
-      functionSummary = await getFileContent(owner, repo, summaryPath)
-    } catch (error) {
-      // Function summary not found, that's okay
+    // Look for function diagram if not already found
+    if (!functionInfo.summary) {
+      try {
+        const summaryPath = `${modulePath}/FUNCTION_SUMMARY/${functionName}.md`
+        functionSummary = await getFileContent(owner, repo, summaryPath)
+      } catch (error) {
+        // Function summary not found, that's okay
+      }
     }
     
     // Look for function diagram
@@ -112,6 +120,13 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {functions.length} functions
                 </span>
+                <FixThisButton 
+                  issue="code quality" 
+                  repoName={repository.name}
+                  filePath={fullPath}
+                  functionName={functionName}
+                  className="ml-2"
+                />
               </div>
             </div>
           </div>
@@ -120,6 +135,15 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
         {/* Function Info Bar */}
         <div className="bg-white dark:bg-github-gray border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <BreadcrumbNav 
+              items={[
+                { label: 'Repo Lens', href: '/' },
+                { label: repository.name, href: `/${params.repo}` },
+                { label: params.module, href: `/${params.repo}/${params.module}` },
+                { label: params.function[params.function.length - 1], current: true }
+              ]}
+              className="mb-3"
+            />
             <div className="flex items-center space-x-6 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="text-gray-500 dark:text-gray-400">Repository:</span>
@@ -148,6 +172,18 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Altitude Marker */}
+              <AltitudeMarker altitude={10000} title="Function View" />
+              
+              {/* Outdated Warning */}
+              {functionInfo.lastModified && repository.updated_at && (
+                <OutdatedWarning
+                  docLastModified={functionInfo.lastModified}
+                  codeLastModified={repository.updated_at}
+                  filePath={fullPath}
+                />
+              )}
+
               {/* Function Summary */}
               {functionSummary && (
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -155,6 +191,9 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                       📖 Function Overview
                     </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Function purpose, parameters, and behavior
+                    </p>
                   </div>
                   <div className="p-6">
                     <div className="prose dark:prose-invert max-w-none">
@@ -162,6 +201,10 @@ export default async function FunctionPage({ params }: FunctionPageProps) {
                         {functionSummary}
                       </pre>
                     </div>
+                    <InlineComment 
+                      placeholder="Add notes about this function..."
+                      className="mt-4"
+                    />
                   </div>
                 </div>
               )}

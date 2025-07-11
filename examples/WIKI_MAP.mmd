@@ -1,35 +1,51 @@
-graph TD
-    A[Repo Lens Repository] --> B[app/]
-    A --> C[components/]
-    A --> D[lib/]
-    A --> E[examples/]
-    A --> F[Configuration Files]
-    
-    B --> B1[page.tsx - Homepage]
-    B --> B2[layout.tsx - Root Layout]
-    B --> B3[globals.css - Global Styles]
-    B --> B4[[repo]/page.tsx - Repo Index]
-    B --> B5[[repo]/[file]/page.tsx - File Detail]
-    B --> B6[api/github-webhook/route.ts - Webhook]
-    
-    C --> C1[RepoCard.tsx - Repository Cards]
-    C --> C2[FileItem.tsx - File/Folder Items]
-    C --> C3[MermaidDiagram.tsx - Diagram Renderer]
-    
-    D --> D1[github.ts - GitHub API Utilities]
-    
-    E --> E1[REPO_WIKI.md - Example Documentation]
-    E --> E2[WIKI_MAP.mmd - Example Diagram]
-    
-    F --> F1[package.json - Dependencies]
-    F --> F2[next.config.js - Next.js Config]
-    F --> F3[tailwind.config.js - Tailwind Config]
-    F --> F4[tsconfig.json - TypeScript Config]
-    F --> F5[vercel.json - Vercel Config]
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:1px
-    style C fill:#bbf,stroke:#333,stroke-width:1px
-    style D fill:#bbf,stroke:#333,stroke-width:1px
-    style E fill:#bfb,stroke:#333,stroke-width:1px
-    style F fill:#fbb,stroke:#333,stroke-width:1px 
+graph TB
+    %% Main Application Structure
+    subgraph "Repo Lens Application (30,000 ft)"
+        A[🌍 Global Repo Index<br/>40,000 ft] --> B[✈️ App Overview<br/>30,000 ft]
+        B --> C[🏢 Module View<br/>20,000 ft]
+        C --> D[🏠 Function View<br/>10,000 ft]
+        D --> E[🔍 Logic Trees<br/>1,000-5,000 ft]
+    end
+
+    %% Repository Structure
+    subgraph "Repository Documentation"
+        F[REPO_WIKI.md<br/>30,000 ft Overview] --> G[WIKI_MAP.mmd<br/>30,000 ft Diagram]
+        H[MODULE_MAP/<br/>20,000 ft Diagrams] --> I[FUNCTION_SUMMARY/<br/>10,000 ft Docs]
+    end
+
+    %% Technology Stack
+    subgraph "Technology Stack"
+        J[Next.js 14<br/>App Router] --> K[GitHub API<br/>Octokit]
+        L[Mermaid.js<br/>Diagrams] --> M[Tailwind CSS<br/>Styling]
+        N[TypeScript<br/>Type Safety] --> O[Vercel<br/>Deployment]
+    end
+
+    %% Features
+    subgraph "Interactive Features"
+        P[Altitude Markers] --> Q[Breadcrumb Navigation]
+        R[Inline Comments] --> S[Fix This Buttons]
+        T[Outdated Warnings] --> U[Visual Diagrams]
+    end
+
+    %% Connections
+    B -.-> F
+    C -.-> H
+    D -.-> I
+    J -.-> L
+    P -.-> Q
+    R -.-> S
+
+    %% Styling
+    classDef altitude40 fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef altitude30 fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff
+    classDef altitude20 fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#000
+    classDef altitude10 fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
+    classDef tech fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
+    classDef feature fill:#06B6D4,stroke:#0891B2,stroke-width:2px,color:#fff
+
+    class A altitude40
+    class B,F altitude30
+    class C,H altitude20
+    class D,I altitude10
+    class J,K,L,M,N,O tech
+    class P,Q,R,S,T,U feature 

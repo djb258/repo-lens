@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { parseRepoName, getRepository, getFileContent, getRepositoryContents } from '@/lib/github'
+import { parseRepoName, getRepository, getFileContent, getRepositoryContents, getModuleInfo } from '@/lib/github'
 import MermaidDiagram from '@/components/MermaidDiagram'
+import AltitudeMarker from '@/components/AltitudeMarker'
+import BreadcrumbNav from '@/components/BreadcrumbNav'
+import InlineComment from '@/components/InlineComment'
+import FixThisButton from '@/components/FixThisButton'
+import OutdatedWarning from '@/components/OutdatedWarning'
 
 interface ModulePageProps {
   params: {
@@ -15,9 +20,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
     const { owner, repo } = parseRepoName(params.repo)
     const modulePath = params.module
     
-    const [repository, moduleContents] = await Promise.all([
+    const [repository, moduleContents, moduleInfo] = await Promise.all([
       getRepository(owner, repo),
-      getRepositoryContents(owner, repo, modulePath)
+      getRepositoryContents(owner, repo, modulePath),
+      getModuleInfo(owner, repo, modulePath)
     ])
 
     // Look for module-specific documentation
@@ -27,7 +33,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     
     // Get module summary and diagram content
     let moduleSummary = ''
-    let moduleDiagram = ''
+    let moduleDiagram = moduleInfo.diagram || ''
     
     if (wikiFile) {
       try {
@@ -37,13 +43,13 @@ export default async function ModulePage({ params }: ModulePageProps) {
       }
     }
     
-    if (moduleDiagramFile) {
+    if (!moduleDiagram && moduleDiagramFile) {
       try {
         moduleDiagram = await getFileContent(owner, repo, `${modulePath}/${params.module}.mmd`)
       } catch (error) {
         console.warn('Could not fetch module diagram:', error)
       }
-    } else if (diagramFile) {
+    } else if (!moduleDiagram && diagramFile) {
       try {
         moduleDiagram = await getFileContent(owner, repo, `${modulePath}/WIKI_MAP.mmd`)
       } catch (error) {
@@ -93,6 +99,12 @@ export default async function ModulePage({ params }: ModulePageProps) {
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {moduleContents.length} items
                 </span>
+                <FixThisButton 
+                  issue="missing tests" 
+                  repoName={repository.name}
+                  filePath={modulePath}
+                  className="ml-2"
+                />
               </div>
             </div>
           </div>
@@ -101,6 +113,14 @@ export default async function ModulePage({ params }: ModulePageProps) {
         {/* Module Info Bar */}
         <div className="bg-white dark:bg-github-gray border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <BreadcrumbNav 
+              items={[
+                { label: 'Repo Lens', href: '/' },
+                { label: repository.name, href: `/${params.repo}` },
+                { label: params.module, current: true }
+              ]}
+              className="mb-3"
+            />
             <div className="flex items-center space-x-6 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="text-gray-500 dark:text-gray-400">Repository:</span>
@@ -127,6 +147,18 @@ export default async function ModulePage({ params }: ModulePageProps) {
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Altitude Marker */}
+              <AltitudeMarker altitude={20000} title="Module View" />
+              
+              {/* Outdated Warning */}
+              {wikiFile?.updated_at && repository.updated_at && (
+                <OutdatedWarning
+                  docLastModified={wikiFile.updated_at}
+                  codeLastModified={repository.updated_at}
+                  filePath={`${modulePath}/REPO_WIKI.md`}
+                />
+              )}
+
               {/* Module Summary */}
               {moduleSummary && (
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -134,6 +166,9 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                       📖 Module Overview
                     </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Module purpose, responsibilities, and key functions
+                    </p>
                   </div>
                   <div className="p-6">
                     <div className="prose dark:prose-invert max-w-none">
@@ -141,6 +176,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
                         {moduleSummary}
                       </pre>
                     </div>
+                    <InlineComment 
+                      placeholder="Add notes about this module..."
+                      className="mt-4"
+                    />
                   </div>
                 </div>
               )}

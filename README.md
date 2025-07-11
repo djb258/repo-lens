@@ -1,9 +1,20 @@
 # Repo Lens
 
-A Next.js application that provides a plain-English, visual way to explore your GitHub repositories. Treat each repo like a "book" with an index, summaries, and diagrams.
+An interactive manual system for GitHub repositories that provides visual and narrative exploration at multiple altitude levels. Repo Lens transforms every repository into a comprehensive service manual with plain-English explanations and visual diagrams.
 
-## Features
+## 🎯 Altitude Model
 
+Repo Lens follows a multi-level altitude system for repository exploration:
+
+- **🌍 40,000 ft**: Global repository index with cards linking to repo pages
+- **✈️ 30,000 ft**: Repository overview with plain-English index, wiki, and Mermaid diagrams
+- **🏢 20,000 ft**: Module view showing module summary, diagram, and exported functions
+- **🏠 10,000 ft**: Function view with function explanation, code blocks, and control flow
+- **🔍 1,000-5,000 ft**: Detailed logic trees (future enhancement)
+
+## 🚀 Features
+
+### Core Functionality
 - **Repository Overview**: View all your GitHub repositories in a clean, card-based interface
 - **File Structure Explorer**: Navigate through repository files with plain-English summaries
 - **Markdown Support**: Display and render markdown files with syntax highlighting
@@ -11,11 +22,20 @@ A Next.js application that provides a plain-English, visual way to explore your 
 - **Dark Mode**: Full dark mode support for better viewing experience
 - **GitHub Integration**: Seamless integration with GitHub API for real-time data
 
-## Pages
+### Interactive Manual System
+- **✅ Altitude Markers**: Visual indicators showing current exploration level
+- **✅ Breadcrumb Navigation**: Consistent navigation across all levels
+- **✅ Inline Editable Comments**: Add notes and documentation on any page
+- **✅ "Fix This" Buttons**: Generate Cursor commands for common issues
+- **✅ Outdated Documentation Warnings**: Alert when code is newer than docs
+- **✅ Visual Diagrams**: Mermaid diagrams for every level of documentation
 
-1. **Homepage (`/`)**: Lists all accessible GitHub repositories
-2. **Repository Index (`/[repo]`)**: Shows file structure and repository overview
-3. **File Detail (`/[repo]/[file]`)**: Displays file content, summaries, and diagrams
+## 📄 Pages & Altitude Levels
+
+1. **Homepage (`/`) - 40,000 ft**: Lists all accessible GitHub repositories
+2. **Repository Overview (`/[repo]`) - 30,000 ft**: Shows repository overview, wiki, and architecture diagrams
+3. **Module View (`/[repo]/[module]`) - 20,000 ft**: Displays module structure, functions, and module-specific diagrams
+4. **Function View (`/[repo]/[module]/[function]`) - 10,000 ft**: Shows function details, code, and function-specific documentation
 
 ## Tech Stack
 
@@ -99,44 +119,72 @@ npm run build
 npm start
 ```
 
-## Repository Structure
+## 📚 Documentation Structure
 
-To get the most out of Repo Lens, consider adding these files to your repositories:
+To get the most out of Repo Lens, add these files to your repositories following the altitude model:
 
-### `REPO_WIKI.md`
-A markdown file containing a plain-English overview of your repository:
+### 30,000 ft Level
+#### `REPO_WIKI.md`
+Repository overview with altitude markers and plain-English explanations:
 
 ```markdown
-# Repository Overview
+# Repository Overview (30,000 ft)
 
+## 🎯 Purpose
 This repository contains a Next.js application for...
 
-## Key Components
+## 🏗️ Architecture Overview
+The application follows a multi-level structure...
 
+## 📁 Core Structure
 - `app/` - Main application code
 - `components/` - Reusable React components
 - `lib/` - Utility functions and API helpers
-
-## Getting Started
-
-1. Install dependencies
-2. Run development server
-3. Open in browser
 ```
 
-### `WIKI_MAP.mmd`
-A Mermaid.js diagram showing the repository structure:
+#### `WIKI_MAP.mmd`
+30,000 ft visual diagram showing repository architecture:
 
 ```mermaid
-graph TD
-    A[Repository Root] --> B[app/]
-    A --> C[components/]
-    A --> D[lib/]
-    B --> E[page.tsx]
-    B --> F[layout.tsx]
-    C --> G[RepoCard.tsx]
-    C --> H[FileItem.tsx]
-    D --> I[github.ts]
+graph TB
+    subgraph "Application Structure"
+        A[Main App] --> B[Components]
+        A --> C[Utilities]
+        B --> D[UI Components]
+        C --> E[API Helpers]
+    end
+```
+
+### 20,000 ft Level
+#### `MODULE_MAP/[module].mmd`
+Module-specific diagrams for each major component:
+
+```mermaid
+graph LR
+    subgraph "Components Module"
+        A[Core Components] --> B[UI Components]
+        B --> C[Shared Utilities]
+    end
+```
+
+### 10,000 ft Level
+#### `FUNCTION_SUMMARY/[function].md`
+Function-level documentation with detailed explanations:
+
+```markdown
+# functionName (10,000 ft)
+
+## 🎯 Purpose
+This function handles...
+
+## 📋 Parameters
+- param1: Description
+- param2: Description
+
+## 🔄 Process Flow
+1. Step one
+2. Step two
+3. Step three
 ```
 
 ## API Endpoints

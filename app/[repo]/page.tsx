@@ -3,6 +3,11 @@ import { notFound } from 'next/navigation'
 import { parseRepoName, parseRepoStructure, getRepository } from '@/lib/github'
 import FileItem from '@/components/FileItem'
 import MermaidDiagram from '@/components/MermaidDiagram'
+import AltitudeMarker from '@/components/AltitudeMarker'
+import BreadcrumbNav from '@/components/BreadcrumbNav'
+import InlineComment from '@/components/InlineComment'
+import FixThisButton from '@/components/FixThisButton'
+import OutdatedWarning from '@/components/OutdatedWarning'
 
 interface RepoPageProps {
   params: {
@@ -45,6 +50,11 @@ export default async function RepoPage({ params }: RepoPageProps) {
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {files.length} items
                 </span>
+                <FixThisButton 
+                  issue="outdated docs" 
+                  repoName={repository.name}
+                  className="ml-2"
+                />
               </div>
             </div>
           </div>
@@ -53,6 +63,13 @@ export default async function RepoPage({ params }: RepoPageProps) {
         {/* Repository Info Bar */}
         <div className="bg-white dark:bg-github-gray border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <BreadcrumbNav 
+              items={[
+                { label: 'Repo Lens', href: '/' },
+                { label: repository.name, current: true }
+              ]}
+              className="mb-3"
+            />
             <div className="flex items-center space-x-6 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="text-gray-500 dark:text-gray-400">Owner:</span>
@@ -92,6 +109,18 @@ export default async function RepoPage({ params }: RepoPageProps) {
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Altitude Marker */}
+              <AltitudeMarker altitude={30000} title="App Overview" />
+              
+              {/* Outdated Warning */}
+              {wikiFile?.lastModified && repository.updated_at && (
+                <OutdatedWarning
+                  docLastModified={wikiFile.lastModified}
+                  codeLastModified={repository.updated_at}
+                  filePath="REPO_WIKI.md"
+                />
+              )}
+
               {/* Repository Summary */}
               {wikiFile?.summary && (
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
@@ -103,6 +132,10 @@ export default async function RepoPage({ params }: RepoPageProps) {
                       {wikiFile.summary}
                     </pre>
                   </div>
+                  <InlineComment 
+                    placeholder="Add notes about this repository overview..."
+                    className="mt-4"
+                  />
                 </div>
               )}
 
@@ -112,6 +145,9 @@ export default async function RepoPage({ params }: RepoPageProps) {
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     ✈️ App Overview (30,000 ft)
                   </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    High-level architecture and module relationships
+                  </p>
                 </div>
                 <div className="divide-y divide-gray-200 dark:divide-gray-700">
                   {/* Major Modules */}

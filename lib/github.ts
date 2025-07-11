@@ -30,6 +30,7 @@ export interface FileContent {
   encoding?: string
   sha: string
   url: string
+  updated_at?: string
 }
 
 export interface RepoFile {
@@ -39,6 +40,24 @@ export interface RepoFile {
   size?: number
   summary?: string
   diagram?: string
+  lastModified?: string
+  content?: string
+}
+
+export interface ModuleInfo {
+  name: string
+  path: string
+  summary?: string
+  diagram?: string
+  functions?: FunctionInfo[]
+}
+
+export interface FunctionInfo {
+  name: string
+  path: string
+  summary?: string
+  code?: string
+  lastModified?: string
 }
 
 export async function getRepositories(): Promise<Repository[]> {
@@ -127,6 +146,7 @@ export async function parseRepoStructure(
         path: item.path,
         type: item.type,
         size: item.size,
+        lastModified: item.updated_at || undefined,
       }
       
       // Check for wiki files
@@ -134,6 +154,7 @@ export async function parseRepoStructure(
         try {
           const content = await getFileContent(owner, repo, item.path)
           file.summary = content
+          file.content = content
         } catch (error) {
           console.warn('Could not fetch REPO_WIKI.md:', error)
         }
@@ -143,6 +164,7 @@ export async function parseRepoStructure(
         try {
           const content = await getFileContent(owner, repo, item.path)
           file.diagram = content
+          file.content = content
         } catch (error) {
           console.warn('Could not fetch WIKI_MAP.mmd:', error)
         }
@@ -155,6 +177,83 @@ export async function parseRepoStructure(
   } catch (error) {
     console.error('Error parsing repo structure:', error)
     throw new Error('Failed to parse repository structure')
+  }
+}
+
+export async function getModuleInfo(
+  owner: string,
+  repo: string,
+  modulePath: string
+): Promise<ModuleInfo> {
+  try {
+    const contents = await getRepositoryContents(owner, repo, modulePath)
+    const moduleInfo: ModuleInfo = {
+      name: modulePath.split('/').pop() || modulePath,
+      path: modulePath,
+    }
+    
+    // Look for module-specific documentation
+    for (const item of contents) {
+      if (item.name === `${moduleInfo.name}.mmd` && item.type === 'file') {
+        try {
+          const content = await getFileContent(owner, repo, item.path)
+          moduleInfo.diagram = content
+        } catch (error) {
+          console.warn(`Could not fetch ${item.name}:`, error)
+        }
+      }
+    }
+    
+    // Look for MODULE_MAP directory
+    try {
+      const moduleMapContents = await getRepositoryContents(owner, repo, 'MODULE_MAP')
+      const moduleMapFile = moduleMapContents.find(f => f.name === `${moduleInfo.name}.mmd`)
+      if (moduleMapFile) {
+        const content = await getFileContent(owner, repo, moduleMapFile.path)
+        moduleInfo.diagram = content
+      }
+    } catch (error) {
+      // MODULE_MAP directory might not exist
+    }
+    
+    return moduleInfo
+  } catch (error) {
+    console.error('Error fetching module info:', error)
+    throw new Error('Failed to fetch module information')
+  }
+}
+
+export async function getFunctionInfo(
+  owner: string,
+  repo: string,
+  functionPath: string
+): Promise<FunctionInfo> {
+  try {
+    const functionInfo: FunctionInfo = {
+      name: functionPath.split('/').pop() || functionPath,
+      path: functionPath,
+    }
+    
+    // Look for function-specific documentation
+    try {
+      const funcSummaryContent = await getFileContent(owner, repo, `FUNCTION_SUMMARY/${functionInfo.name}.md`)
+      functionInfo.summary = funcSummaryContent
+    } catch (error) {
+      console.warn(`Could not fetch function summary for ${functionInfo.name}:`, error)
+    }
+    
+    // Get the actual function code
+    try {
+      const codeContent = await getFileContent(owner, repo, functionPath)
+      functionInfo.code = codeContent
+    } catch (error) {
+      console.warn(`Could not fetch function code for ${functionPath}:`, error)
+    }
+    
+    return functionInfo
+  } catch (error) {
+    console.error('Error fetching function info:', error)
+    throw new Error('Failed to fetch function information')
   }
 }
 
