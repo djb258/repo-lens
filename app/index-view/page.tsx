@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getRepositories, Repository } from '@/lib/github'
+import { Repository } from '@/lib/github'
 import RepoCard from '@/components/RepoCard'
 import { Diagnostics, Altitude, Module, Submodule, Action } from '@/lib/diagnostics'
 import { useDiagnosticOverlay } from '@/components/DiagnosticOverlay'
@@ -29,7 +29,11 @@ export default function IndexViewPage() {
           { page: 'index-view' }
         )
 
-        const repos = await getRepositories()
+        const response = await fetch('/api/repositories')
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const repos = await response.json()
         setRepositories(repos)
 
         // Log successful load
