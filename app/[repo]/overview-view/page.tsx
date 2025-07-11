@@ -380,7 +380,7 @@ function OverviewViewContent({ params, owner, repo, repository, visualFiles }: a
                   🔑 Key Components
                 </h3>
                 <div className="space-y-2">
-                  {visualFiles.functionDoc.keyComponents.map((component, index) => (
+                  {visualFiles.functionDoc.keyComponents.map((component: string, index: number) => (
                     <div key={index} className="flex items-center space-x-2">
                       <span className="text-blue-500">•</span>
                       <span className="text-sm text-gray-700 dark:text-gray-300">{component}</span>
