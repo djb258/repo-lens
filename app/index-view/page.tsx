@@ -3,31 +3,18 @@
 import { useState, useEffect } from 'react'
 import { Repository } from '@/lib/github'
 import RepoCard from '@/components/RepoCard'
-import { Diagnostics, Altitude, Module, Submodule, Action } from '@/lib/diagnostics'
-import { useDiagnosticOverlay } from '@/components/DiagnosticOverlay'
 
 export default function IndexViewPage() {
   const [repositories, setRepositories] = useState<Repository[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const { DiagnosticWrapper } = useDiagnosticOverlay('index-view')
 
   useEffect(() => {
     const loadRepositories = async () => {
       try {
         setLoading(true)
         setError(null)
-
-        // Log page load start
-        Diagnostics.success(
-          Altitude.COMPONENT,
-          Module.UI,
-          Submodule.REPO_CARD,
-          Action.LOAD,
-          'Starting repository index page load',
-          { page: 'index-view' }
-        )
 
         const response = await fetch('/api/repositories')
         if (!response.ok) {
@@ -36,28 +23,7 @@ export default function IndexViewPage() {
         const repos = await response.json()
         setRepositories(repos)
 
-        // Log successful load
-        Diagnostics.success(
-          Altitude.COMPONENT,
-          Module.UI,
-          Submodule.REPO_CARD,
-          Action.COMPLETE,
-          `Successfully loaded ${repos.length} repositories`,
-          { count: repos.length }
-        )
-
       } catch (err: any) {
-        // Log error
-        Diagnostics.error(
-          Altitude.COMPONENT,
-          Module.UI,
-          Submodule.REPO_CARD,
-          Action.LOAD,
-          'Failed to load repositories on index page',
-          err,
-          { page: 'index-view' }
-        )
-
         setError(err.message || 'Failed to load repositories')
       } finally {
         setLoading(false)
@@ -75,46 +41,41 @@ export default function IndexViewPage() {
 
   if (loading) {
     return (
-      <DiagnosticWrapper>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-4 py-8">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading repositories...</p>
-            </div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading repositories...</p>
           </div>
         </div>
-      </DiagnosticWrapper>
+      </div>
     )
   }
 
   if (error) {
     return (
-      <DiagnosticWrapper>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-4 py-8">
-            <div className="text-center">
-              <div className="bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-6 max-w-md mx-auto">
-                <h2 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
-                  Error Loading Repositories
-                </h2>
-                <p className="text-red-600 dark:text-red-300 mb-4">{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                >
-                  Try Again
-                </button>
-              </div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-6 max-w-md mx-auto">
+              <h2 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
+                Error Loading Repositories
+              </h2>
+              <p className="text-red-600 dark:text-red-300 mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              >
+                Try Again
+              </button>
             </div>
           </div>
         </div>
-      </DiagnosticWrapper>
+      </div>
     )
   }
 
   return (
-    <DiagnosticWrapper>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
@@ -163,6 +124,5 @@ export default function IndexViewPage() {
           </div>
         </div>
       </div>
-    </DiagnosticWrapper>
-  )
-} 
+    )
+  } 
