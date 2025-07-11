@@ -9,8 +9,12 @@ interface RepoCardProps {
 
 export default function RepoCard({ repo }: RepoCardProps) {
   return (
-    <Link href={`/${repo.full_name}`}>
-      <div className="repo-card cursor-pointer">
+    <Link href={`/${repo.full_name}/overview-view`}>
+      <div 
+        className="repo-card cursor-pointer"
+        data-repo-name={repo.name}
+        data-repo-description={repo.description || ''}
+      >
         <div className="flex items-start space-x-4">
           <Image
             src={repo.owner.avatar_url}

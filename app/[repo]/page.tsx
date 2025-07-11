@@ -6,7 +6,6 @@ interface RepoPageProps {
   }
 }
 
-export default async function RepoPage({ params }: RepoPageProps) {
-  // Redirect to the new ORPT overview page
-  redirect(`/${params.repo}/overview`)
+export default function RepoPage({ params }: RepoPageProps) {
+  redirect(`/${params.repo}/overview-view`)
 } 
