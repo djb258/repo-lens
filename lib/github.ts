@@ -2,9 +2,17 @@ import { Octokit } from '@octokit/rest'
 import { Diagnostics, Altitude, Module, Submodule, Action, Status } from '@/lib/diagnostics'
 import { config, hasGitHubToken } from '@/lib/config'
 
-const octokit = new Octokit({
-  auth: config.github.token,
-})
+// Create Octokit instance with proper error handling
+function createOctokit() {
+  const token = config.github.token
+  if (!token) {
+    throw new Error('GitHub token is required but not provided')
+  }
+  
+  return new Octokit({
+    auth: token,
+  })
+}
 
 export interface Repository {
   id: number
@@ -74,6 +82,7 @@ export async function getRepositories(): Promise<Repository[]> {
       { per_page: 100, sort: 'updated' }
     )
 
+    const octokit = createOctokit()
     const response = await octokit.repos.listForAuthenticatedUser({
       sort: 'updated',
       per_page: 100,
@@ -159,6 +168,7 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
       { owner, repo }
     )
 
+    const octokit = createOctokit()
     const response = await octokit.repos.get({
       owner,
       repo,
@@ -214,6 +224,7 @@ export async function getRepositoryContents(
       { owner, repo, path }
     )
 
+    const octokit = createOctokit()
     const response = await octokit.repos.getContent({
       owner,
       repo,
@@ -234,7 +245,7 @@ export async function getRepositoryContents(
         repo, 
         path, 
         count: contents.length,
-        types: contents.map(item => item.type)
+        types: contents.map((item: any) => item.type)
       }
     )
     
@@ -272,6 +283,7 @@ export async function getFileContent(
       { owner, repo, path }
     )
 
+    const octokit = createOctokit()
     const response = await octokit.repos.getContent({
       owner,
       repo,
