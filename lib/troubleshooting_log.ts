@@ -3,6 +3,7 @@
 // Tracks repeat YELLOW codes and escalates to RED if repeated ≥3 times
 
 import { DiagnosticEvent, Severity } from './diagnostics'
+import { config } from './config'
 
 interface TroubleshootingEntry {
   id: string
@@ -39,8 +40,8 @@ export class TroubleshootingLog {
   private centralizedLogUrl: string | null = null
 
   private constructor() {
-    // Load centralized log URL from environment
-    this.centralizedLogUrl = process.env.CENTRALIZED_LOG_URL || null
+    // Load centralized log URL from config
+    this.centralizedLogUrl = config.logging.centralizedUrl || null
   }
 
   static getInstance(): TroubleshootingLog {
@@ -127,7 +128,7 @@ export class TroubleshootingLog {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.CENTRALIZED_LOG_TOKEN || ''}`
+          'Authorization': `Bearer ${config.logging.centralizedToken || ''}`
         },
         body: JSON.stringify(logEntry)
       })

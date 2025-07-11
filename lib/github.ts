@@ -1,8 +1,9 @@
 import { Octokit } from '@octokit/rest'
 import { Diagnostics, Altitude, Module, Submodule, Action, Status } from '@/lib/diagnostics'
+import { config, hasGitHubToken } from '@/lib/config'
 
 const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
+  auth: config.github.token,
 })
 
 export interface Repository {
