@@ -33,11 +33,26 @@ A Next.js application that provides a plain-English, visual way to explore your 
 - Node.js 18+ 
 - GitHub Personal Access Token
 
-### Installation
+### Quick Setup
+
+**Option 1: Automated Setup (Recommended)**
+
+**Windows:**
+```powershell
+.\scripts\setup-github.ps1
+```
+
+**macOS/Linux:**
+```bash
+chmod +x scripts/setup-github.sh
+./scripts/setup-github.sh
+```
+
+**Option 2: Manual Installation**
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/djb258/repo-lens.git
 cd repo-lens
 ```
 
@@ -64,6 +79,10 @@ GITHUB_TOKEN=your_github_token_here
    - `repo` (Full control of private repositories)
    - `read:user` (Read access to user profile)
 4. Copy the token and add it to your `.env.local` file
+
+### Detailed Setup Guide
+
+For comprehensive setup instructions, troubleshooting, and security best practices, see [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md).
 
 ### Development
 
