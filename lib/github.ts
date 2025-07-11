@@ -463,6 +463,17 @@ export function parseRepoName(fullName: string): { owner: string; repo: string }
   // Handle URL-encoded repository names
   const decodedName = decodeURIComponent(fullName)
   
+  // Filter out common non-repository requests
+  const commonNonRepoRequests = [
+    'favicon.ico', 'robots.txt', 'sitemap.xml', '.well-known',
+    'manifest.json', 'sw.js', 'workbox-', 'static/',
+    'api/', '_next/', '__nextjs_original-stack-frame'
+  ]
+  
+  if (commonNonRepoRequests.some(req => decodedName.includes(req))) {
+    throw new Error(`Invalid repository format: ${fullName}. This appears to be a system request, not a repository.`)
+  }
+  
   // Split by '/' and handle various formats
   const parts = decodedName.split('/')
   
