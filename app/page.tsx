@@ -54,10 +54,10 @@ export default async function HomePage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Repo Lens
+                🧠 ORPT Repo Lens Viewer
               </h1>
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                GitHub Repository Browser
+                Operational Repository Performance Tracker
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -71,6 +71,16 @@ export default async function HomePage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page Title */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Repository Index (40,000 ft)
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Select a repository to view its ORPT visual documentation, performance metrics, and troubleshooting data.
+          </p>
+        </div>
+
         {/* Repository Grid */}
         {repositories.length === 0 ? (
           <div className="text-center py-12">
@@ -93,7 +103,7 @@ export default async function HomePage() {
         {/* Footer Info */}
         <div className="mt-12 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Click on any repository to explore its structure and files
+            Click on any repository to explore its ORPT visual documentation and performance metrics
           </p>
         </div>
       </main>

@@ -1,0 +1,60 @@
+graph TB
+    %% Main Application Structure
+    subgraph "ORPT Repo Lens Viewer"
+        A[🌍 Repository Index<br/>40,000 ft] --> B[📋 Repository Overview<br/>30,000 ft]
+        B --> C[📊 Architecture Diagram<br/>30,000 ft]
+        B --> D[🔍 Module Detail<br/>20,000 ft]
+        D --> E[⚙️ Function View<br/>10,000 ft]
+    end
+
+    %% Core Modules
+    subgraph "Core Modules"
+        F[components<br/>UI Components] --> G[lib<br/>Utilities]
+        G --> H[app<br/>Pages & Layouts]
+        H --> I[api<br/>API Routes]
+    end
+
+    %% Documentation Structure
+    subgraph "VISUALS Documentation"
+        J[index.yaml<br/>Module Index] --> K[function_doc.md<br/>Function Summary]
+        L[overview.mmd<br/>Architecture] --> M[troubleshooting/<br/>Issue Tracking]
+        M --> N[training/<br/>Fixes Log]
+    end
+
+    %% Technology Stack
+    subgraph "Technology Stack"
+        O[Next.js 14<br/>App Router] --> P[GitHub API<br/>Octokit]
+        Q[Mermaid.js<br/>Diagrams] --> R[Tailwind CSS<br/>Styling]
+        S[TypeScript<br/>Type Safety] --> T[YAML<br/>Config]
+    end
+
+    %% Performance Tracking
+    subgraph "Performance Metrics"
+        U[Health Score<br/>0-100%] --> V[Fix Count<br/>Per Module]
+        V --> W[Escalation<br/>Threshold]
+        W --> X[Human Review<br/>Required]
+    end
+
+    %% Connections
+    B -.-> J
+    C -.-> L
+    D -.-> M
+    F -.-> U
+    G -.-> V
+
+    %% Styling
+    classDef altitude40 fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef altitude30 fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff
+    classDef altitude20 fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#000
+    classDef altitude10 fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
+    classDef module fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
+    classDef tech fill:#06B6D4,stroke:#0891B2,stroke-width:2px,color:#fff
+    classDef perf fill:#F97316,stroke:#EA580C,stroke-width:2px,color:#fff
+
+    class A altitude40
+    class B,C altitude30
+    class D altitude20
+    class E altitude10
+    class F,G,H,I module
+    class O,P,Q,R,S,T tech
+    class U,V,W,X perf 

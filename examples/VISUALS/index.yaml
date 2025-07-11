@@ -1,0 +1,48 @@
+modules:
+  - name: "components"
+    path: "components/"
+    description: "Reusable React components for the application UI"
+    type: "module"
+    priority: "high"
+  
+  - name: "lib"
+    path: "lib/"
+    description: "Utility functions and API helpers"
+    type: "module"
+    priority: "high"
+  
+  - name: "app"
+    path: "app/"
+    description: "Next.js app router pages and layouts"
+    type: "module"
+    priority: "high"
+  
+  - name: "api"
+    path: "app/api/"
+    description: "API routes and webhook handlers"
+    type: "module"
+    priority: "medium"
+  
+  - name: "styles"
+    path: "app/globals.css"
+    description: "Global CSS styles and Tailwind configuration"
+    type: "file"
+    priority: "low"
+  
+  - name: "config"
+    path: "next.config.js"
+    description: "Next.js configuration and build settings"
+    type: "file"
+    priority: "medium"
+  
+  - name: "types"
+    path: "types/"
+    description: "TypeScript type definitions and interfaces"
+    type: "module"
+    priority: "medium"
+  
+  - name: "docs"
+    path: "docs/"
+    description: "Documentation and setup guides"
+    type: "module"
+    priority: "low" 

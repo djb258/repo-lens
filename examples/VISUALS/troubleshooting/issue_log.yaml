@@ -1,0 +1,60 @@
+issues:
+  - moduleId: "components"
+    moduleName: "components"
+    issues:
+      - id: "COMP-001"
+        type: "warning"
+        message: "Component prop types need validation"
+        timestamp: "2024-01-15T10:30:00Z"
+        fixCount: 1
+        status: "resolved"
+      - id: "COMP-002"
+        type: "error"
+        message: "Memory leak in useEffect cleanup"
+        timestamp: "2024-01-20T14:45:00Z"
+        fixCount: 2
+        status: "resolved"
+    totalFixes: 3
+    lastUpdated: "2024-01-20T14:45:00Z"
+
+  - moduleId: "lib"
+    moduleName: "lib"
+    issues:
+      - id: "LIB-001"
+        type: "error"
+        message: "GitHub API rate limiting not handled"
+        timestamp: "2024-01-10T09:15:00Z"
+        fixCount: 1
+        status: "resolved"
+    totalFixes: 1
+    lastUpdated: "2024-01-10T09:15:00Z"
+
+  - moduleId: "app"
+    moduleName: "app"
+    issues:
+      - id: "APP-001"
+        type: "warning"
+        message: "Page loading states not implemented"
+        timestamp: "2024-01-18T16:20:00Z"
+        fixCount: 0
+        status: "open"
+      - id: "APP-002"
+        type: "error"
+        message: "Route conflict between [file] and [module]"
+        timestamp: "2024-01-22T11:30:00Z"
+        fixCount: 1
+        status: "resolved"
+    totalFixes: 1
+    lastUpdated: "2024-01-22T11:30:00Z"
+
+  - moduleId: "api"
+    moduleName: "api"
+    issues:
+      - id: "API-001"
+        type: "info"
+        message: "Webhook validation needs improvement"
+        timestamp: "2024-01-12T13:45:00Z"
+        fixCount: 0
+        status: "open"
+    totalFixes: 0
+    lastUpdated: "2024-01-12T13:45:00Z" 

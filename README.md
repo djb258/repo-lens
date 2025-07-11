@@ -1,240 +1,249 @@
-# Repo Lens
+# 🧠 ORPT Repo Lens Viewer - Operational Repository Performance Tracker
 
-An interactive manual system for GitHub repositories that provides visual and narrative exploration at multiple altitude levels. Repo Lens transforms every repository into a comprehensive service manual with plain-English explanations and visual diagrams.
+A comprehensive 4-page Next.js application that transforms any GitHub repository into an interactive manual system with visual documentation, performance metrics, and troubleshooting data.
 
-## 🎯 Altitude Model
+## 🎯 ORPT System Overview
 
-Repo Lens follows a multi-level altitude system for repository exploration:
+The ORPT (Operational Repository Performance Tracker) system provides a structured approach to repository analysis with:
 
-- **🌍 40,000 ft**: Global repository index with cards linking to repo pages
-- **✈️ 30,000 ft**: Repository overview with plain-English index, wiki, and Mermaid diagrams
-- **🏢 20,000 ft**: Module view showing module summary, diagram, and exported functions
-- **🏠 10,000 ft**: Function view with function explanation, code blocks, and control flow
-- **🔍 1,000-5,000 ft**: Detailed logic trees (future enhancement)
+- **📊 Performance Metrics**: Health scores, fix counts, and escalation tracking
+- **🎨 Visual Documentation**: Color-coded Mermaid diagrams with issue overlays
+- **⚠️ Issue Tracking**: Automated detection and human escalation
+- **📚 Training Memory**: Detailed fix logs and resolution history
 
-## 🚀 Features
+## 🏗️ Architecture - 4-Page System
 
-### Core Functionality
-- **Repository Overview**: View all your GitHub repositories in a clean, card-based interface
-- **File Structure Explorer**: Navigate through repository files with plain-English summaries
-- **Markdown Support**: Display and render markdown files with syntax highlighting
-- **Mermaid Diagrams**: Visualize repository structure with Mermaid.js diagrams
-- **Dark Mode**: Full dark mode support for better viewing experience
-- **GitHub Integration**: Seamless integration with GitHub API for real-time data
+### 1️⃣ Page 1 - Repository Index (40,000 ft)
+- **Route**: `/`
+- **Purpose**: Global repository browser
+- **Features**: 
+  - Searchable repository list
+  - GitHub API integration
+  - Repository cards with metadata
 
-### Interactive Manual System
-- **✅ Altitude Markers**: Visual indicators showing current exploration level
-- **✅ Breadcrumb Navigation**: Consistent navigation across all levels
-- **✅ Inline Editable Comments**: Add notes and documentation on any page
-- **✅ "Fix This" Buttons**: Generate Cursor commands for common issues
-- **✅ Outdated Documentation Warnings**: Alert when code is newer than docs
-- **✅ Visual Diagrams**: Mermaid diagrams for every level of documentation
+### 2️⃣ Page 2 - Repository Overview (30,000 ft)
+- **Route**: `/[repo]/overview`
+- **Purpose**: Repository documentation and module index
+- **Features**:
+  - Module index from `VISUALS/index.yaml`
+  - Function documentation from `VISUALS/function_doc.md`
+  - Architecture overview and key components
+  - Quick actions to diagram and troubleshooting
 
-## 📄 Pages & Altitude Levels
+### 3️⃣ Page 3 - Architecture Diagram (30,000 ft)
+- **Route**: `/[repo]/diagram`
+- **Purpose**: Visual performance schematic
+- **Features**:
+  - Enhanced Mermaid diagram from `VISUALS/overview.mmd`
+  - Color-coded nodes based on issue data
+  - Performance metrics and health scores
+  - Issue summary with escalation warnings
 
-1. **Homepage (`/`) - 40,000 ft**: Lists all accessible GitHub repositories
-2. **Repository Overview (`/[repo]`) - 30,000 ft**: Shows repository overview, wiki, and architecture diagrams
-3. **Module View (`/[repo]/[module]`) - 20,000 ft**: Displays module structure, functions, and module-specific diagrams
-4. **Function View (`/[repo]/[module]/[function]`) - 10,000 ft**: Shows function details, code, and function-specific documentation
+### 4️⃣ Page 4 - Module Detail (20k → 10k ft)
+- **Route**: `/[repo]/module/[moduleId]`
+- **Purpose**: Detailed module analysis
+- **Features**:
+  - Module-specific issue logs
+  - Fix history from training data
+  - Escalation warnings for problematic modules
+  - Raw code access (optional)
 
-## Tech Stack
+## 📁 Required File Structure
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **GitHub API**: Octokit REST API
-- **Diagrams**: Mermaid.js
-- **Markdown**: React Markdown with syntax highlighting
+Every repository must contain a `/VISUALS` folder with:
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- GitHub Personal Access Token
-
-### Quick Setup
-
-**Option 1: Automated Setup (Recommended)**
-
-**Windows:**
-```powershell
-.\scripts\setup-github.ps1
+```
+VISUALS/
+├── index.yaml              # Module index (Page 2)
+├── function_doc.md         # Repository summary (Page 2)
+├── overview.mmd            # Mermaid diagram (Page 3)
+├── troubleshooting/
+│   └── issue_log.yaml      # Issue tracking (Page 3 & 4)
+└── training/
+    └── fixes.yaml          # Fix history (Page 4)
 ```
 
-**macOS/Linux:**
-```bash
-chmod +x scripts/setup-github.sh
-./scripts/setup-github.sh
+### File Formats
+
+#### `index.yaml` - Module Index
+```yaml
+modules:
+  - name: "components"
+    path: "components/"
+    description: "Reusable React components"
+    type: "module"
+    priority: "high"
 ```
 
-**Option 2: Manual Installation**
-
-1. Clone the repository:
-```bash
-git clone https://github.com/djb258/repo-lens.git
-cd repo-lens
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create environment file:
-```bash
-cp env.example .env.local
-```
-
-4. Add your GitHub token to `.env.local`:
-```env
-GITHUB_TOKEN=your_github_token_here
-```
-
-### Creating a GitHub Token
-
-1. Go to [GitHub Settings > Tokens](https://github.com/settings/tokens)
-2. Click "Generate new token (classic)"
-3. Select scopes:
-   - `repo` (Full control of private repositories)
-   - `read:user` (Read access to user profile)
-4. Copy the token and add it to your `.env.local` file
-
-### Detailed Setup Guide
-
-For comprehensive setup instructions, troubleshooting, and security best practices, see [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md).
-
-### Development
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the application.
-
-### Building for Production
-
-```bash
-npm run build
-npm start
-```
-
-## 📚 Documentation Structure
-
-To get the most out of Repo Lens, add these files to your repositories following the altitude model:
-
-### 30,000 ft Level
-#### `REPO_WIKI.md`
-Repository overview with altitude markers and plain-English explanations:
-
+#### `function_doc.md` - Function Documentation
 ```markdown
-# Repository Overview (30,000 ft)
+# Repository Overview
 
-## 🎯 Purpose
-This repository contains a Next.js application for...
+## Overview
+Human-readable repository summary
 
-## 🏗️ Architecture Overview
-The application follows a multi-level structure...
+## Architecture
+System architecture description
 
-## 📁 Core Structure
-- `app/` - Main application code
-- `components/` - Reusable React components
-- `lib/` - Utility functions and API helpers
-```
+## Key Components
+- Component 1
+- Component 2
 
-#### `WIKI_MAP.mmd`
-30,000 ft visual diagram showing repository architecture:
-
-```mermaid
-graph TB
-    subgraph "Application Structure"
-        A[Main App] --> B[Components]
-        A --> C[Utilities]
-        B --> D[UI Components]
-        C --> E[API Helpers]
-    end
-```
-
-### 20,000 ft Level
-#### `MODULE_MAP/[module].mmd`
-Module-specific diagrams for each major component:
-
-```mermaid
-graph LR
-    subgraph "Components Module"
-        A[Core Components] --> B[UI Components]
-        B --> C[Shared Utilities]
-    end
-```
-
-### 10,000 ft Level
-#### `FUNCTION_SUMMARY/[function].md`
-Function-level documentation with detailed explanations:
-
-```markdown
-# functionName (10,000 ft)
-
-## 🎯 Purpose
-This function handles...
-
-## 📋 Parameters
-- param1: Description
-- param2: Description
-
-## 🔄 Process Flow
-1. Step one
-2. Step two
-3. Step three
-```
-
-## API Endpoints
-
-### GitHub Webhook (Optional)
-
-The application includes a webhook endpoint at `/api/github-webhook` that can receive GitHub push events and automatically update cached data when wiki files are modified.
-
-To set up the webhook:
-
-1. Add webhook secret to `.env.local`:
-```env
-GITHUB_WEBHOOK_SECRET=your_webhook_secret_here
-```
-
-2. Configure webhook in your GitHub repository:
-   - URL: `https://your-domain.com/api/github-webhook`
-   - Content type: `application/json`
-   - Events: `Push events`
+## Dependencies
+- Dependency 1
+- Dependency 2
 
 ## Deployment
+Deployment instructions
 
-### Vercel (Recommended)
+## Troubleshooting
+Common issues and solutions
+```
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy
+#### `overview.mmd` - Mermaid Diagram
+```mermaid
+graph TB
+    A[Module A] --> B[Module B]
+    B --> C[Module C]
+    
+    classDef healthy fill:#10B981
+    classDef warning fill:#F59E0B
+    classDef critical fill:#F97316
+    classDef escalated fill:#EF4444
+```
 
-### Other Platforms
+#### `issue_log.yaml` - Issue Tracking
+```yaml
+issues:
+  - moduleId: "components"
+    moduleName: "components"
+    issues:
+      - id: "COMP-001"
+        type: "error"
+        message: "Memory leak detected"
+        timestamp: "2024-01-15T10:30:00Z"
+        fixCount: 2
+        status: "resolved"
+    totalFixes: 2
+    lastUpdated: "2024-01-15T10:30:00Z"
+```
 
-The application can be deployed to any platform that supports Next.js:
+#### `fixes.yaml` - Training Memory
+```yaml
+fixes:
+  - moduleId: "components"
+    fixes:
+      - id: "FIX-001"
+        issueId: "COMP-001"
+        description: "Fixed memory leak"
+        timestamp: "2024-01-15T11:00:00Z"
+        appliedBy: "system"
+        success: true
+        notes: "Used proper cleanup function"
+```
 
-- Netlify
-- Railway
-- DigitalOcean App Platform
-- AWS Amplify
+## 🎨 Color Coding System
 
-## Contributing
+### Node Status Colors
+- **🟩 Green (0 fixes)**: Healthy - No issues
+- **🟨 Yellow (1 fix)**: Warning - Minor issues
+- **🟧 Orange (2 fixes)**: Critical - Multiple issues
+- **🟥 Red (3+ fixes)**: Escalated - Human review required
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### Escalation Threshold
+- **3+ fixes** = Automatic escalation to human review
+- **Visual warnings** displayed on affected modules
+- **"Escalated to Human"** badges shown
 
-## License
+## 🚀 Technology Stack
 
-MIT License - see LICENSE file for details
+- **Next.js 14** with App Router
+- **GitHub REST API** via Octokit
+- **Mermaid.js** for enhanced diagrams
+- **YAML parsing** with js-yaml
+- **Tailwind CSS** for responsive design
+- **TypeScript** for type safety
+- **Vercel** for deployment
 
-## Support
+## 🔧 Setup Instructions
 
-If you encounter any issues or have questions, please open an issue on GitHub. 
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/djb258/repo-lens.git
+   cd repo-lens
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure GitHub token**:
+   ```bash
+   cp env.example .env.local
+   # Edit .env.local and add your GitHub token
+   ```
+
+4. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Deploy to Vercel**:
+   ```bash
+   npm run build
+   # Deploy to Vercel with environment variables
+   ```
+
+## 📊 Performance Features
+
+### Health Scoring
+- **0-100% health score** based on module status
+- **Real-time metrics** from issue tracking
+- **Visual progress bars** and status indicators
+
+### Issue Tracking
+- **Automated detection** of common problems
+- **Fix counting** per module
+- **Escalation system** for complex issues
+
+### Training Memory
+- **Detailed fix logs** with success/failure tracking
+- **Resolution notes** and implementation details
+- **Historical data** for pattern recognition
+
+## 🔮 Future Enhancements
+
+### Phase 2 Features (Scaffolded)
+- **Firebase integration** for real-time fix logs
+- **Visual alerts** and escalation dashboard
+- **Live error pinging** (Cursor/Mantis integration)
+- **AI-powered fix suggestions** at code level
+
+### Advanced Features
+- **Multi-repository comparison**
+- **Trend analysis** and performance forecasting
+- **Team collaboration** features
+- **Custom escalation rules**
+
+## 📝 Example Usage
+
+1. **Browse repositories** at the global index
+2. **Select a repository** to view its ORPT documentation
+3. **Explore modules** through the interactive index
+4. **View performance** via color-coded diagrams
+5. **Drill into details** for specific modules
+6. **Monitor escalations** for human intervention
+
+## 🤝 Contributing
+
+The ORPT system is designed to be extensible. Key areas for contribution:
+
+- **Enhanced Mermaid parsing** for more complex diagrams
+- **Additional issue detection** patterns
+- **Custom escalation rules** and thresholds
+- **Integration plugins** for other development tools
+
+## 📄 License
+
+MIT License - see LICENSE file for details. 
