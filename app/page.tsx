@@ -20,7 +20,7 @@ export default async function HomePage() {
               Repo Lens
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              View your GitHub repositories in a plain-English, visual way
+              Your GitHub Repository Browser
             </p>
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md mx-auto">
               <h3 className="text-lg font-medium text-red-800 dark:text-red-200 mb-2">
@@ -48,20 +48,38 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-github-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Repo Lens
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            View your GitHub repositories in a plain-English, visual way
-          </p>
+      {/* GitHub-like Header */}
+      <header className="bg-white dark:bg-github-gray border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Repo Lens
+              </h1>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                GitHub Repository Browser
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {repositories.length} repositories
+              </span>
+            </div>
+          </div>
         </div>
+      </header>
 
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Repository Grid */}
         {repositories.length === 0 ? (
-          <div className="text-center">
+          <div className="text-center py-12">
+            <div className="text-gray-400 dark:text-gray-500 text-6xl mb-4">📁</div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No repositories found
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              No repositories found. Make sure your GitHub token has the correct permissions.
+              Make sure your GitHub token has the correct permissions.
             </p>
           </div>
         ) : (
@@ -71,7 +89,14 @@ export default async function HomePage() {
             ))}
           </div>
         )}
-      </div>
+
+        {/* Footer Info */}
+        <div className="mt-12 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Click on any repository to explore its structure and files
+          </p>
+        </div>
+      </main>
     </div>
   )
 } 
