@@ -106,24 +106,132 @@ export default async function RepoPage({ params }: RepoPageProps) {
                 </div>
               )}
 
-              {/* File Structure */}
+              {/* App Overview - 30,000 ft View */}
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    📁 File Structure
+                    ✈️ App Overview (30,000 ft)
                   </h2>
                 </div>
                 <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {files.length === 0 ? (
-                    <div className="px-6 py-8 text-center">
-                      <div className="text-gray-400 dark:text-gray-500 text-4xl mb-2">📄</div>
-                      <p className="text-gray-600 dark:text-gray-400">No files found</p>
+                  {/* Major Modules */}
+                  <div className="p-6">
+                    <h3 className="text-md font-medium text-gray-900 dark:text-white mb-3">
+                      🧭 Major Modules
+                    </h3>
+                    <div className="space-y-2">
+                      {files
+                        .filter(f => f.type === 'dir' && ['src', 'app', 'components', 'lib', 'utils', 'api', 'pages'].includes(f.name))
+                        .map((dir) => (
+                          <Link 
+                            key={dir.path}
+                            href={`/${params.repo}/${dir.path}`}
+                            className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors border border-gray-200 dark:border-gray-600"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <span className="text-lg">📦</span>
+                                <div>
+                                  <span className="text-gray-900 dark:text-white font-medium">{dir.name}</span>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400">Main application module</p>
+                                </div>
+                              </div>
+                              <span className="text-blue-600 dark:text-blue-400">→</span>
+                            </div>
+                          </Link>
+                        ))}
                     </div>
-                  ) : (
-                    files.map((file) => (
-                      <FileItem key={file.path} file={file} repoName={params.repo} />
-                    ))
+                  </div>
+
+                  {/* Other Directories */}
+                  {files.filter(f => f.type === 'dir' && !['src', 'app', 'components', 'lib', 'utils', 'api', 'pages'].includes(f.name)).length > 0 && (
+                    <div className="p-6">
+                      <h3 className="text-md font-medium text-gray-900 dark:text-white mb-3">
+                        📁 Other Directories
+                      </h3>
+                      <div className="space-y-2">
+                        {files
+                          .filter(f => f.type === 'dir' && !['src', 'app', 'components', 'lib', 'utils', 'api', 'pages'].includes(f.name))
+                          .map((dir) => (
+                            <Link 
+                              key={dir.path}
+                              href={`/${params.repo}/${dir.path}`}
+                              className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <span className="text-lg">📁</span>
+                                <span className="text-gray-900 dark:text-white font-medium">{dir.name}</span>
+                              </div>
+                            </Link>
+                          ))}
+                      </div>
+                    </div>
                   )}
+
+                  {/* Key Files */}
+                  <div className="p-6">
+                    <h3 className="text-md font-medium text-gray-900 dark:text-white mb-3">
+                      🔑 Key Files
+                    </h3>
+                    <div className="space-y-2">
+                      {files
+                        .filter(f => f.type === 'file' && ['package.json', 'README.md', 'index.js', 'main.js', 'app.js', 'index.ts', 'main.ts', 'app.ts'].includes(f.name))
+                        .map((file) => (
+                          <Link 
+                            key={file.path}
+                            href={`/${params.repo}/${file.path}`}
+                            className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <span className="text-lg">🔑</span>
+                                <span className="text-gray-900 dark:text-white font-medium">{file.name}</span>
+                              </div>
+                              <span className="text-sm text-gray-500 dark:text-gray-400">
+                                {file.size ? `${(file.size / 1024).toFixed(1)} KB` : ''}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* All Files (Collapsible) */}
+                  <div className="p-6">
+                    <details className="group">
+                      <summary className="cursor-pointer list-none">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-md font-medium text-gray-900 dark:text-white">
+                            📄 All Files ({files.filter(f => f.type === 'file').length})
+                          </h3>
+                          <span className="text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform">
+                            ▼
+                          </span>
+                        </div>
+                      </summary>
+                      <div className="mt-3 space-y-2">
+                        {files
+                          .filter(f => f.type === 'file' && !['package.json', 'README.md', 'index.js', 'main.js', 'app.js', 'index.ts', 'main.ts', 'app.ts'].includes(f.name))
+                          .map((file) => (
+                            <Link 
+                              key={file.path}
+                              href={`/${params.repo}/${file.path}`}
+                              className="block p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <span className="text-lg">📄</span>
+                                  <span className="text-gray-900 dark:text-white text-sm">{file.name}</span>
+                                </div>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  {file.size ? `${(file.size / 1024).toFixed(1)} KB` : ''}
+                                </span>
+                              </div>
+                            </Link>
+                          ))}
+                      </div>
+                    </details>
+                  </div>
                 </div>
               </div>
             </div>
