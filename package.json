@@ -16,6 +16,7 @@
     "@octokit/rest": "^20.0.2",
     "@types/js-yaml": "^4.0.9",
     "date-fns": "^3.0.6",
+    "dotenv": "^17.2.0",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
     "mermaid": "^10.7.0",
