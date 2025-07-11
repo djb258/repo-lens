@@ -76,53 +76,53 @@ export default function IndexViewPage() {
   }
 
   return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              📚 Repository Index
-            </h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            📚 Repository Index
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Explore your GitHub repositories with RepoLens
+          </p>
+        </div>
+
+        {/* Search */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search repositories..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+
+        {/* Repository Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredRepositories.map((repo) => (
+            <RepoCard key={repo.id} repo={repo} />
+          ))}
+        </div>
+
+        {filteredRepositories.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No repositories found
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Explore your GitHub repositories with RepoLens
+              {searchTerm ? 'Try adjusting your search terms.' : 'No repositories available.'}
             </p>
           </div>
+        )}
 
-          {/* Search */}
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder="Search repositories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Repository Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredRepositories.map((repo) => (
-              <RepoCard key={repo.id} repo={repo} />
-            ))}
-          </div>
-
-          {filteredRepositories.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                No repositories found
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                {searchTerm ? 'Try adjusting your search terms.' : 'No repositories available.'}
-              </p>
-            </div>
-          )}
-
-          {/* Repository Count */}
-          <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-            Showing {filteredRepositories.length} of {repositories.length} repositories
-          </div>
+        {/* Repository Count */}
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+          Showing {filteredRepositories.length} of {repositories.length} repositories
         </div>
       </div>
-    )
-  } 
+    </div>
+  )
+} 
