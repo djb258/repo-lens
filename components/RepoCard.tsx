@@ -52,7 +52,7 @@ export default function RepoCard({ repo }: RepoCardProps) {
                 🍴 {repo.forks_count}
               </span>
               <span>
-                Updated {formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true })}
+                Updated {repo.updated_at ? formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true }) : 'Unknown'}
               </span>
             </div>
           </div>

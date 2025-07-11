@@ -104,7 +104,7 @@ export default async function RepoPage({ params }: RepoPageProps) {
                   <div>
                     <span className="text-gray-500 dark:text-gray-400">Last Updated:</span>
                     <span className="ml-2 text-gray-900 dark:text-white">
-                      {new Date(repository.updated_at).toLocaleDateString()}
+                      {repository.updated_at ? new Date(repository.updated_at).toLocaleDateString() : 'Unknown'}
                     </span>
                   </div>
                   <div>
