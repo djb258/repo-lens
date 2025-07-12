@@ -3,7 +3,12 @@
 import dotenv from 'dotenv'
 
 // Load environment variables from .env file
-dotenv.config()
+// Force reload to ensure consistency
+try {
+  dotenv.config({ override: true })
+} catch (error) {
+  console.warn('⚠️  Could not load .env file - using system environment variables')
+}
 
 export interface AppConfig {
   github: {
