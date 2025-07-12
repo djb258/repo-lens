@@ -8,11 +8,6 @@ dotenv.config()
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 DEBUG: API route called - fetching repositories')
-    console.log('🔍 DEBUG: Starting getRepositories() function')
-    console.log('🔍 DEBUG: GitHub token available:', !!process.env.GITHUB_TOKEN)
-    console.log('🔍 DEBUG: Making GitHub API call...')
-    
     // Log API call start
     Diagnostics.success(
       Altitude.SERVICE,
@@ -24,9 +19,6 @@ export async function GET(request: NextRequest) {
     )
 
     const repositories = await getRepositories()
-    
-    console.log(`🔍 DEBUG: GitHub API response received: ${repositories.length} repos`)
-    console.log(`🔍 DEBUG: API route returning ${repositories.length} repositories`)
 
     // Log successful API call
     Diagnostics.success(
