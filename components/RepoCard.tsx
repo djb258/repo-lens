@@ -9,7 +9,7 @@ interface RepoCardProps {
 
 export default function RepoCard({ repo }: RepoCardProps) {
   return (
-    <Link href={`/${repo.full_name}/overview-view`}>
+    <Link href={`/${repo.full_name}`}>
       <div 
         className="repo-card cursor-pointer"
         data-repo-name={repo.name}
