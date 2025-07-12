@@ -23,8 +23,13 @@ export default function DiagnosticDashboard() {
 
   useEffect(() => {
     const updateEvents = () => {
-      const events = diagnosticLogger.getDiagnosticEvents()
-      setDiagnosticEvents(events)
+      try {
+        const events = diagnosticLogger.getDiagnosticEvents()
+        setDiagnosticEvents(events)
+      } catch (error) {
+        console.error('Error updating diagnostic events:', error)
+        setDiagnosticEvents([])
+      }
     }
 
     updateEvents()
@@ -227,7 +232,7 @@ export default function DiagnosticDashboard() {
             className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="ALL">All Modules</option>
-            {Object.values(Module).map(module => (
+            {Object.values(Module).filter(module => typeof module === 'string').map(module => (
               <option key={module} value={module}>{module}</option>
             ))}
           </select>
