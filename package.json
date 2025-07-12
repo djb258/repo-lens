@@ -10,7 +10,10 @@
     "validate:udns": "ts-node lib/udns_validator.ts",
     "validate:udns:js": "node scripts/validate-build.js",
     "setup:github": "node scripts/setup-github.js",
-    "setup:github:ps": "powershell -ExecutionPolicy Bypass -File scripts/setup-github.ps1"
+    "setup:github:ps": "powershell -ExecutionPolicy Bypass -File scripts/setup-github.ps1",
+    "barton:run": "node scripts/run-barton-system.js",
+    "barton:test": "node scripts/run-barton-system.js --test-only",
+    "barton:monitor": "node scripts/run-barton-system.js --monitor-only"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
@@ -33,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",

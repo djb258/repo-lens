@@ -22,7 +22,35 @@ export default async function OverviewViewPage({ params }: OverviewViewProps) {
       throw new Error(`Invalid repository format: ${params.repo}. Expected format: owner/repo`)
     }
     
-    const repository = await getRepository(owner, repo)
+    // Try to get repository data, but handle missing token gracefully
+    let repository: any = null
+    try {
+      repository = await getRepository(owner, repo)
+    } catch (error: any) {
+      // If GitHub token is missing, create a placeholder repository object
+      if (error.message.includes('GitHub token is required') || error.message.includes('Failed to fetch repository')) {
+        console.warn('GitHub token missing - using placeholder repository data')
+        repository = {
+          id: 0,
+          name: repo,
+          full_name: `${owner}/${repo}`,
+          description: 'Repository data unavailable - GitHub token required',
+          private: false,
+          html_url: `https://github.com/${owner}/${repo}`,
+          updated_at: null,
+          language: null,
+          stargazers_count: 0,
+          forks_count: 0,
+          owner: {
+            login: owner,
+            avatar_url: 'https://github.com/github.png'
+          }
+        }
+      } else {
+        // Re-throw other errors
+        throw error
+      }
+    }
     
     // Create a simple visualFiles object for now
     const visualFiles = {
@@ -225,6 +253,26 @@ function OverviewViewContent({ params, owner, repo, repository, visualFiles }: a
             <p className="text-gray-600 dark:text-gray-400 mt-2">
               {repository.description}
             </p>
+          )}
+          
+          {/* GitHub Token Notice */}
+          {repository.description === 'Repository data unavailable - GitHub token required' && (
+            <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+              <div className="flex items-start space-x-3">
+                <span className="text-yellow-600 dark:text-yellow-400 text-lg">⚠️</span>
+                <div>
+                  <h4 className="text-yellow-800 dark:text-yellow-200 font-medium mb-1">
+                    Limited Functionality
+                  </h4>
+                  <p className="text-yellow-700 dark:text-yellow-300 text-sm mb-2">
+                    GitHub token is missing. Repository data is limited. To see full repository information, add your GitHub Personal Access Token to the environment variables.
+                  </p>
+                  <div className="text-xs text-yellow-600 dark:text-yellow-400">
+                    <strong>Setup:</strong> Add GITHUB_TOKEN to your environment variables or Vercel settings.
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

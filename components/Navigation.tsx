@@ -35,6 +35,18 @@ export default function Navigation() {
                 Repositories
               </Link>
 
+              {/* Barton Dashboard Link */}
+              <Link
+                href="/barton-dashboard"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  pathname === '/barton-dashboard'
+                    ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                🏥 Barton
+              </Link>
+
               {/* Diagnostics Link with Badge */}
               <Link
                 href="/diagnostics"
