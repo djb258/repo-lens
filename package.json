@@ -29,7 +29,8 @@
     "react-markdown": "^9.0.1",
     "rehype-highlight": "^7.0.0",
     "rehype-raw": "^7.0.0",
-    "remark-gfm": "^4.0.0"
+    "remark-gfm": "^4.0.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",

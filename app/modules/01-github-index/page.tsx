@@ -169,7 +169,7 @@ export default function GitHubIndexPage() {
               clickable: true
             },
             {
-              path: 'lib/barton-numbering-doctrine.ts',
+              path: 'lib/barton-numbering-doctrine.tsx',
               type: 'utility',
               description: 'Barton Numbering Doctrine enforcement system',
               bartonNumber: '39.01.00.02',
@@ -197,7 +197,7 @@ export default function GitHubIndexPage() {
             },
             {
               name: 'BartonNumberDisplay',
-              file: 'lib/barton-numbering-doctrine.ts',
+              file: 'lib/barton-numbering-doctrine.tsx',
               description: 'React component for displaying Barton numbers with health status',
               dependencies: ['React', 'Barton Numbering Doctrine']
             }
