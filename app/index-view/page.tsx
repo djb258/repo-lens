@@ -16,21 +16,16 @@ export default function IndexViewPage() {
       try {
         setLoading(true)
         setError(null)
-
-        console.log('🔍 DEBUG: Component render - loading: true error: null repos: 0 filtered: 0')
         
         const response = await fetch('/api/repositories')
-        console.log('🔍 DEBUG: API response status:', response.status)
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const repos = await response.json()
-        console.log('🔍 DEBUG: Repositories loaded:', repos.length)
         setRepositories(repos)
 
       } catch (err: any) {
-        console.error('🔍 DEBUG: Error loading repositories:', err)
         setError(err.message || 'Failed to load repositories')
       } finally {
         setLoading(false)
