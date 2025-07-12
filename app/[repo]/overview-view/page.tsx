@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parseRepoName, getRepository } from '@/lib/github'
-import { getVisualFiles } from '@/lib/parseVisualFiles'
 import AltitudeMarker from '@/components/AltitudeMarker'
 import BreadcrumbNav from '@/components/BreadcrumbNav'
 import FixThisButton from '@/components/FixThisButton'
@@ -23,10 +22,23 @@ export default async function OverviewViewPage({ params }: OverviewViewProps) {
       throw new Error(`Invalid repository format: ${params.repo}. Expected format: owner/repo`)
     }
     
-    const [repository, visualFiles] = await Promise.all([
-      getRepository(owner, repo),
-      getVisualFiles(owner, repo)
-    ])
+    const repository = await getRepository(owner, repo)
+    
+    // Create a simple visualFiles object for now
+    const visualFiles = {
+      index: [],
+      functionDoc: {
+        overview: '',
+        architecture: '',
+        keyComponents: [],
+        dependencies: [],
+        deployment: '',
+        troubleshooting: ''
+      },
+      overviewMmd: '',
+      issueLog: [],
+      fixesLog: []
+    }
 
     // Wrap the page in DiagnosticMapProvider
     return (
