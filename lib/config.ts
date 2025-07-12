@@ -23,10 +23,22 @@ export interface AppConfig {
 
 // Validate required environment variables
 function validateConfig(): AppConfig {
+  // Debug logging - check environment variables directly
+  const githubToken = process.env.GITHUB_TOKEN
+  const githubUsername = process.env.GITHUB_USERNAME
+  
+  console.log('🔍 DEBUG: Environment check - GITHUB_TOKEN:', githubToken ? 'Present' : 'Missing')
+  console.log('🔍 DEBUG: Environment check - GITHUB_USERNAME:', githubUsername ? 'Present' : 'Missing')
+  
+  if (githubToken) {
+    console.log('🔍 DEBUG: Token length:', githubToken.length)
+    console.log('🔍 DEBUG: Token starts with:', githubToken.substring(0, 4))
+  }
+  
   const config: AppConfig = {
     github: {
-      token: process.env.GITHUB_TOKEN || '',
-      username: process.env.GITHUB_USERNAME,
+      token: githubToken || '',
+      username: githubUsername,
     },
     logging: {
       centralizedUrl: process.env.CENTRALIZED_LOG_URL,
@@ -43,6 +55,8 @@ function validateConfig(): AppConfig {
   if (!config.github.token) {
     console.warn('⚠️  GITHUB_TOKEN not found in environment variables')
     console.warn('   The app will work but with limited GitHub API access')
+  } else {
+    console.log('✅ GITHUB_TOKEN found and configured')
   }
 
   // Validate centralized logging configuration
