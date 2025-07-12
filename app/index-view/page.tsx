@@ -17,14 +17,20 @@ export default function IndexViewPage() {
         setLoading(true)
         setError(null)
 
+        console.log('🔍 DEBUG: Component render - loading: true error: null repos: 0 filtered: 0')
+        
         const response = await fetch('/api/repositories')
+        console.log('🔍 DEBUG: API response status:', response.status)
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const repos = await response.json()
+        console.log('🔍 DEBUG: Repositories loaded:', repos.length)
         setRepositories(repos)
 
       } catch (err: any) {
+        console.error('🔍 DEBUG: Error loading repositories:', err)
         setError(err.message || 'Failed to load repositories')
       } finally {
         setLoading(false)
@@ -131,7 +137,8 @@ export default function IndexViewPage() {
                 <ol className="text-sm text-blue-700 dark:text-blue-300 text-left space-y-1">
                   <li>1. Create a GitHub Personal Access Token</li>
                   <li>2. Add it to your .env file as GITHUB_TOKEN=your_token_here</li>
-                  <li>3. Restart the development server</li>
+                  <li>3. For Vercel: Add GITHUB_TOKEN in Vercel Environment Variables</li>
+                  <li>4. Restart the development server</li>
                 </ol>
               </div>
             )}
