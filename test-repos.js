@@ -16,7 +16,7 @@ async function testRepositories() {
     })
     
     // Check for the specific repository
-    const targetRepo = repos.find(r => r.name === 'ulimate-blueprint-pilot')
+    const targetRepo = repos.find(r => r.name === 'ultimate-blueprint-pilot')
     if (targetRepo) {
       console.log('✅ Found target repository:')
       console.log(`   Full name: ${targetRepo.full_name}`)

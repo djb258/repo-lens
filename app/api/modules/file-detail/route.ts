@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logEnhancedORBTEvent } from '@/lib/enhanced-orbt'
 import { logBartonEvent, BartonPrinciple } from '@/lib/barton'
-import { Severity } from '@/lib/diagnostics'
+import { Severity, Status } from '@/lib/diagnostics'
 import { 
   FileStructure, 
   ModuleViewData, 
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     logEnhancedORBTEvent(
       '10.API.file-detail.error',
       Severity.RED,
-      'FAILED_VALIDATION',
+      Status.FAILED_VALIDATION,
       'Missing required parameters for file detail API',
       { repoId, moduleId, fileId },
       BartonPrinciple.UNIVERSAL_MONITORING
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     logEnhancedORBTEvent(
       '10.API.file-detail.request',
       Severity.GREEN,
-      'SUCCESS',
+      Status.SUCCESS,
       `File detail API request for ${fileId}`,
       { repoId, moduleId, fileId },
       BartonPrinciple.UNIVERSAL_MONITORING
@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
       BartonPrinciple.UNIVERSAL_MONITORING,
       '10.API.file-detail.success',
       Severity.GREEN,
-      'SUCCESS',
+      Status.SUCCESS,
       `File detail API response generated successfully`,
       { 
         fileId, 
@@ -202,7 +202,7 @@ export async function GET(request: NextRequest) {
     logEnhancedORBTEvent(
       '10.API.file-detail.error',
       Severity.RED,
-      'FAILED_FETCH',
+      Status.FAILED_FETCH,
       `File detail API error: ${errorMessage}`,
       { repoId, moduleId, fileId, error: errorMessage },
       BartonPrinciple.UNIVERSAL_MONITORING

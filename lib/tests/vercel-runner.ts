@@ -381,8 +381,7 @@ async function testVercelVisuals(
       warnings,
       metadata: {
         viewport: '1920x1080',
-        timestamp: new Date().toISOString(),
-        environment: 'vercel'
+        timestamp: new Date().toISOString()
       }
     };
 
@@ -402,8 +401,7 @@ async function testVercelVisuals(
       warnings: [],
       metadata: {
         viewport: '1920x1080',
-        timestamp: new Date().toISOString(),
-        environment: 'vercel'
+        timestamp: new Date().toISOString()
       }
     };
   }
@@ -503,4 +501,4 @@ export function generateVercelReport(result: VercelTestResult): string {
   }
 
   return report;
-} 
+}

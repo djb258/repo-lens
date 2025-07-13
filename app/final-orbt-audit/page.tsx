@@ -9,10 +9,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { validateORBTCompliance } from '@/lib/validators/orbt-validator';
 import { generateComplianceReport } from '@/lib/diagnostics/audit-report';
 import { renderModuleVisuals } from '@/lib/visuals/generator';
-import { checkTroubleshootingCapabilities } from '@/lib/troubleshooting/self-diagnostics';
 
 interface AuditState {
   status: 'idle' | 'running' | 'completed' | 'error';
@@ -48,8 +46,12 @@ export default function FinalORBTAudit() {
 
     try {
       // 🔍 Step 1: Validate all modules conform to ORBT + Barton numbering
-      const results = await validateORBTCompliance();
-      setComplianceResults(results);
+      const complianceResponse = await fetch('/api/audit/orbt-compliance');
+      if (!complianceResponse.ok) {
+        throw new Error('Failed to validate ORBT compliance');
+      }
+      const results = await complianceResponse.json();
+      setComplianceResults(results.data);
       
       setAuditState(prev => ({
         ...prev,
@@ -58,7 +60,7 @@ export default function FinalORBTAudit() {
       }));
 
       // 📄 Step 2: Ensure each module has required documentation + visual outputs
-      const visualPromises = results.modules.map(async (module: any) => {
+      const visualPromises = results.data.modules.map(async (module: any) => {
         return await renderModuleVisuals({
           name: module.module,
           bartonNumber: module.bartonNumber,
@@ -73,7 +75,7 @@ export default function FinalORBTAudit() {
       setModuleVisuals(visuals);
 
       // Check for missing documentation or visuals
-      const missingRequirements = results.modules.filter((module: any) => 
+      const missingRequirements = results.data.modules.filter((module: any) => 
         !module.documentation.exists || !module.visual.exists
       );
 
@@ -98,10 +100,14 @@ export default function FinalORBTAudit() {
       }));
 
       // 🧰 Step 3: Confirm the app includes a repair/troubleshooting interface
-      const troubleshootingResult = await checkTroubleshootingCapabilities();
-      setTroubleshootingCapabilities(troubleshootingResult);
+      const troubleshootingResponse = await fetch('/api/audit/troubleshooting');
+      if (!troubleshootingResponse.ok) {
+        throw new Error('Failed to check troubleshooting capabilities');
+      }
+      const troubleshootingResult = await troubleshootingResponse.json();
+      setTroubleshootingCapabilities(troubleshootingResult.data);
 
-      if (!troubleshootingResult) {
+      if (!troubleshootingResult.data) {
         throw new Error("App is missing a troubleshooting/repair interface (ORBT:Repair)");
       }
 
@@ -114,7 +120,7 @@ export default function FinalORBTAudit() {
       // 📊 Step 4: Generate full compliance report for log or review
       const report = await generateComplianceReport({
         application: "Repo Lens",
-        complianceResults: results,
+        complianceResults: results.data,
         auditedBy: "Cursor ORBT Audit",
         timestamp: new Date().toISOString(),
       });
@@ -127,9 +133,9 @@ export default function FinalORBTAudit() {
         totalSteps: 4,
         currentStep: '✅ Repo Lens application passed ORBT + Barton doctrine audit.',
         results: {
-          complianceResults: results,
+          complianceResults: results.data,
           moduleVisuals: visuals,
-          troubleshootingCapabilities: troubleshootingResult,
+          troubleshootingCapabilities: troubleshootingResult.data,
           auditReport: report
         }
       });

@@ -209,7 +209,15 @@ export class EnhancedBartonSystem {
 
     // Log all diagnostics
     diagnostics.forEach(diagnostic => {
-      this.logDiagnostic(diagnostic)
+      this.logDiagnostic({
+        principle: diagnostic.principle,
+        severity: diagnostic.severity,
+        category: diagnostic.category,
+        message: diagnostic.message,
+        context: diagnostic.context,
+        moduleId: diagnostic.moduleId,
+        bartonNumber: diagnostic.bartonNumber
+      })
     })
 
     return diagnostics

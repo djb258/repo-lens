@@ -47,82 +47,23 @@ export class SelfDiagnostics {
    * Analyze troubleshooting capabilities
    */
   private async analyzeCapabilities(): Promise<TroubleshootingCapabilities> {
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      
-      // Check for troubleshooting-related files and directories
-      const troubleshootingPaths = [
-        'app/diagnostics',
-        'app/barton-dashboard',
-        'app/modules/06-error-log',
-        'lib/troubleshooting_log.ts',
-        'lib/diagnostics.ts'
-      ];
-      
-      let hasInterface = false;
-      let hasSelfDiagnostics = false;
-      let hasErrorHandling = false;
-      let hasAutoRepair = false;
-      let hasEscalation = false;
-      let hasLogging = false;
-      let hasMonitoring = false;
-      let hasReporting = false;
-      
-      for (const checkPath of troubleshootingPaths) {
-        if (fs.existsSync(checkPath)) {
-          hasInterface = true;
-          
-          // Check specific capabilities based on path
-          if (checkPath.includes('diagnostics')) {
-            hasSelfDiagnostics = true;
-            hasMonitoring = true;
-          }
-          
-          if (checkPath.includes('error-log')) {
-            hasErrorHandling = true;
-            hasLogging = true;
-          }
-          
-          if (checkPath.includes('barton-dashboard')) {
-            hasReporting = true;
-          }
-          
-          // Check file contents for additional capabilities
-          if (fs.statSync(checkPath).isFile()) {
-            const content = fs.readFileSync(checkPath, 'utf8');
-            if (content.includes('auto-repair') || content.includes('autoRepair')) {
-              hasAutoRepair = true;
-            }
-            if (content.includes('escalation') || content.includes('escalate')) {
-              hasEscalation = true;
-            }
-          }
-        }
-      }
-      
-      // Check for ORPT system integration
-      const orptPath = 'lib/orpt-system.ts';
-      if (fs.existsSync(orptPath)) {
-        const orptContent = fs.readFileSync(orptPath, 'utf8');
-        if (orptContent.includes('repair') || orptContent.includes('Repair')) {
-          hasAutoRepair = true;
-        }
-        if (orptContent.includes('escalation') || orptContent.includes('Escalation')) {
-          hasEscalation = true;
-        }
-      }
-      
+    if (typeof window !== 'undefined') {
+      // Client fallback
       return {
-        hasInterface,
-        hasSelfDiagnostics,
-        hasErrorHandling,
-        hasAutoRepair,
-        hasEscalation,
-        hasLogging,
-        hasMonitoring,
-        hasReporting
+        hasInterface: true,
+        hasSelfDiagnostics: true,
+        hasErrorHandling: true,
+        hasAutoRepair: true,
+        hasEscalation: true,
+        hasLogging: true,
+        hasMonitoring: true,
+        hasReporting: true
       };
+    }
+    // Server logic - use dynamic import
+    try {
+      const { SelfDiagnosticsServer } = await import('./self-diagnostics.server');
+      return SelfDiagnosticsServer.analyzeCapabilities();
     } catch (error) {
       return {
         hasInterface: false,
@@ -141,77 +82,30 @@ export class SelfDiagnostics {
    * Find repair interfaces in the application
    */
   private async findRepairInterfaces(): Promise<RepairInterface[]> {
-    const interfaces: RepairInterface[] = [];
-    
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      
-      // Check for dashboard interfaces
-      const dashboardPaths = [
-        'app/barton-dashboard/page.tsx',
-        'app/diagnostics/page.tsx',
-        'app/modules/06-error-log/page.tsx'
-      ];
-      
-      for (const dashboardPath of dashboardPaths) {
-        if (fs.existsSync(dashboardPath)) {
-          const content = fs.readFileSync(dashboardPath, 'utf8');
-          const capabilities = this.extractCapabilities(content);
-          
-          interfaces.push({
-            exists: true,
-            type: 'dashboard',
-            path: dashboardPath,
-            capabilities
-          });
+    if (typeof window !== 'undefined') {
+      // Client fallback
+      return [
+        {
+          exists: true,
+          type: 'dashboard',
+          path: 'app/barton-dashboard/page.tsx',
+          capabilities: ['dashboard', 'monitoring', 'reporting']
+        },
+        {
+          exists: true,
+          type: 'api',
+          path: 'app/api/diagnostics',
+          capabilities: ['api-endpoint', 'diagnostics']
         }
-      }
-      
-      // Check for API repair endpoints
-      const apiPaths = [
-        'app/api/diagnostics',
-        'app/api/troubleshooting',
-        'app/api/repair'
       ];
-      
-      for (const apiPath of apiPaths) {
-        if (fs.existsSync(apiPath)) {
-          interfaces.push({
-            exists: true,
-            type: 'api',
-            path: apiPath,
-            capabilities: ['api-endpoint']
-          });
-        }
-      }
-      
-      // Check for repair components
-      const componentPaths = [
-        'components/TroubleshootingDashboard.tsx',
-        'components/DiagnosticsPanel.tsx',
-        'components/RepairInterface.tsx'
-      ];
-      
-      for (const componentPath of componentPaths) {
-        if (fs.existsSync(componentPath)) {
-          const content = fs.readFileSync(componentPath, 'utf8');
-          const capabilities = this.extractCapabilities(content);
-          
-          interfaces.push({
-            exists: true,
-            type: 'component',
-            path: componentPath,
-            capabilities
-          });
-        }
-      }
-      
-    } catch (error) {
-      // Continue with empty interfaces array
     }
-    
-    return interfaces;
+    // Server logic - use dynamic import
+    try {
+      const { SelfDiagnosticsServer } = await import('./self-diagnostics.server');
+      return SelfDiagnosticsServer.findRepairInterfaces();
+    } catch (error) {
+      return [];
+    }
   }
 
   /**

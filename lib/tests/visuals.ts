@@ -353,7 +353,17 @@ export async function updateVisualBaselines(
   for (const route of routes) {
     try {
       const url = `${baseUrl}${route}`;
-      await captureScreenshot(url, route, { baselineDir, viewports: ['1920x1080'], thresholds: {}, ignoreSelectors: [] });
+      await captureScreenshot(url, route, { 
+        baselineDir, 
+        viewports: ['1920x1080'], 
+        thresholds: {
+          layout: 0.95,
+          colors: 0.90,
+          fonts: 0.95,
+          images: 0.85
+        }, 
+        ignoreSelectors: [] 
+      });
       console.log(`✅ Updated baseline for ${route}`);
     } catch (error) {
       console.error(`❌ Failed to update baseline for ${route}:`, error);

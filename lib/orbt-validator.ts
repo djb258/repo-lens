@@ -154,7 +154,7 @@ class ORBTValidator {
       errorMessage: `ORBT validation failed: ${error.errors}`,
       errorSignature: 'ORBT_VALIDATION_FAILED',
       severity: error.severity,
-      toolUsed: 'ORBT_Validator',
+      toolUsed: 'Manual',
       fixDescription: error.suggestedFix,
       resolved: false,
       recurrenceCount: 1,
@@ -168,7 +168,7 @@ class ORBTValidator {
       BartonPrinciple.ERROR_ESCALATION,
       `ORBT validation failed for ${error.module}: ${error.errors}`,
       'error',
-      'orbt_validator',
+      'error',
       { 
         moduleId: error.module, 
         bartonNumber: error.barton_number,

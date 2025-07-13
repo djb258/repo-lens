@@ -9,7 +9,8 @@ import {
   BartonDiagnostic, 
   DoctrineNumbering,
   ORBTCycle 
-} from '../../types'
+} from '@/app/modules/types'
+import { Severity, Status } from '@/lib/diagnostics'
 import { logEnhancedORBTEvent } from '@/lib/enhanced-orbt'
 import { logBartonEvent, BartonPrinciple } from '@/lib/barton'
 
@@ -76,8 +77,8 @@ export default function FileDetailViewPage({ params }: FileDetailViewProps) {
         // Log ORBT event for file detail view access
         logEnhancedORBTEvent(
           '10.FILE.detail.load',
-          'GREEN',
-          'SUCCESS',
+          Severity.GREEN,
+          Status.SUCCESS,
           `Loading file detail view for ${fileId}`,
           { repoId, moduleId, fileId },
           BartonPrinciple.UNIVERSAL_MONITORING
@@ -103,8 +104,8 @@ export default function FileDetailViewPage({ params }: FileDetailViewProps) {
         logBartonEvent(
           BartonPrinciple.UNIVERSAL_MONITORING,
           '10.FILE.detail.success',
-          'GREEN',
-          'SUCCESS',
+          Severity.GREEN,
+          Status.SUCCESS,
           `File detail loaded successfully: ${fileId}`,
           { fileSize: fileResult.data.content?.size, violations: fileResult.data.orbtViolations.length }
         )
@@ -116,8 +117,8 @@ export default function FileDetailViewPage({ params }: FileDetailViewProps) {
         // Log error
         logEnhancedORBTEvent(
           '10.FILE.detail.error',
-          'RED',
-          'FAILED_FETCH',
+          Severity.RED,
+          Status.FAILED_FETCH,
           `Failed to load file detail: ${errorMessage}`,
           { repoId, moduleId, fileId, error: errorMessage },
           BartonPrinciple.UNIVERSAL_MONITORING
