@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import React from 'react'
 import { 
   DiagnosticEvent, 
   Severity, 
@@ -13,9 +14,8 @@ import {
   Status
 } from '@/lib/diagnostics'
 
-export default function DiagnosticDashboard() {
+const DiagnosticDashboard = React.memo(function DiagnosticDashboard() {
   const [diagnosticEvents, setDiagnosticEvents] = useState<DiagnosticEvent[]>([])
-  const [filteredEvents, setFilteredEvents] = useState<DiagnosticEvent[]>([])
   const [selectedSeverity, setSelectedSeverity] = useState<Severity | 'ALL'>('ALL')
   const [selectedModule, setSelectedModule] = useState<Module | 'ALL'>('ALL')
   const [searchTerm, setSearchTerm] = useState('')
@@ -25,7 +25,12 @@ export default function DiagnosticDashboard() {
     const updateEvents = () => {
       try {
         const events = diagnosticLogger.getDiagnosticEvents()
-        setDiagnosticEvents(events)
+        setDiagnosticEvents((prevEvents: DiagnosticEvent[]) => {
+          if (JSON.stringify(prevEvents) !== JSON.stringify(events)) {
+            return events
+          }
+          return prevEvents
+        })
       } catch (error) {
         console.error('Error updating diagnostic events:', error)
         setDiagnosticEvents([])
@@ -34,40 +39,44 @@ export default function DiagnosticDashboard() {
 
     updateEvents()
     
-    // Update every 2 seconds
-    const interval = setInterval(updateEvents, 2000)
+    // Update every 5 seconds (reduced from 2 seconds for better performance)
+    const interval = setInterval(updateEvents, 5000)
     
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
+  const filteredEvents = useMemo(() => {
+    if (diagnosticEvents.length === 0) return []
+    
     let filtered = diagnosticEvents
 
     // Filter by severity
     if (selectedSeverity !== 'ALL') {
-      filtered = filtered.filter(event => event.severity === selectedSeverity)
+      filtered = filtered.filter((event: DiagnosticEvent) => event.severity === selectedSeverity)
     }
 
     // Filter by module
     if (selectedModule !== 'ALL') {
-      filtered = filtered.filter(event => 
+      filtered = filtered.filter((event: DiagnosticEvent) => 
         event.diagnostic_code.includes(`${selectedModule}.`)
       )
     }
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(event =>
-        event.diagnostic_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.status.toLowerCase().includes(searchTerm.toLowerCase())
+      const lowerSearchTerm = searchTerm.toLowerCase()
+      filtered = filtered.filter((event: DiagnosticEvent) =>
+        event.diagnostic_code.toLowerCase().includes(lowerSearchTerm) ||
+        event.message.toLowerCase().includes(lowerSearchTerm) ||
+        event.status.toLowerCase().includes(lowerSearchTerm)
       )
     }
 
-    setFilteredEvents(filtered)
+    return filtered
   }, [diagnosticEvents, selectedSeverity, selectedModule, searchTerm])
 
-  const getSeverityStats = () => {
+
+  const severityStats = useMemo(() => {
     const stats = {
       [Severity.GREEN]: 0,
       [Severity.YELLOW]: 0,
@@ -75,26 +84,25 @@ export default function DiagnosticDashboard() {
       [Severity.RED]: 0,
     }
 
-    diagnosticEvents.forEach(event => {
-      stats[event.severity]++
+    diagnosticEvents.forEach((event: DiagnosticEvent) => {
+      stats[event.severity as keyof typeof stats]++
     })
 
     return stats
-  }
+  }, [diagnosticEvents])
 
-  const getModuleStats = () => {
+  const moduleStats = useMemo(() => {
     const stats: Record<string, number> = {}
     
-    diagnosticEvents.forEach(event => {
+    diagnosticEvents.forEach((event: DiagnosticEvent) => {
       const module = event.diagnostic_code.split('.')[1]
-      stats[module] = (stats[module] || 0) + 1
+      if (module) {
+        stats[module] = (stats[module] || 0) + 1
+      }
     })
 
     return stats
-  }
-
-  const severityStats = getSeverityStats()
-  const moduleStats = getModuleStats()
+  }, [diagnosticEvents])
 
   const getSeverityColor = (severity: Severity) => {
     switch (severity) {
@@ -126,7 +134,8 @@ export default function DiagnosticDashboard() {
     }
   }
 
-  const clearAllEvents = () => {
+  const clearAllEvents = useCallback(() => {
+    const eventCount = diagnosticEvents.length
     diagnosticLogger.clearLog()
     setDiagnosticEvents([])
     setFilteredEvents([])
@@ -138,11 +147,11 @@ export default function DiagnosticDashboard() {
       Submodule.DIAGNOSTIC_LOG,
       Action.DELETE,
       'All diagnostic events cleared by user',
-      { clearedCount: diagnosticEvents.length }
+      { clearedCount: eventCount }
     )
-  }
+  }, [diagnosticEvents.length])
 
-  const exportEvents = () => {
+  const exportEvents = useCallback(() => {
     const dataStr = JSON.stringify(diagnosticEvents, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
@@ -151,7 +160,7 @@ export default function DiagnosticDashboard() {
     link.download = `diagnostic-events-${new Date().toISOString().split('T')[0]}.json`
     link.click()
     URL.revokeObjectURL(url)
-  }
+  }, [diagnosticEvents])
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -393,4 +402,6 @@ export default function DiagnosticDashboard() {
       )}
     </div>
   )
-} 
+})
+
+export default DiagnosticDashboard   

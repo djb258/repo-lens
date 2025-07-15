@@ -187,6 +187,7 @@ export class DiagnosticLogger {
   private static instance: DiagnosticLogger
   private errorLog: DiagnosticEvent[] = []
   private isProduction: boolean
+  private maxLogSize: number = 1000
 
   private constructor() {
     this.isProduction = process.env.NODE_ENV === 'production'
@@ -225,8 +226,9 @@ export class DiagnosticLogger {
       url: typeof window !== 'undefined' ? window.location.href : undefined,
     }
 
-    // Add to local log
+    // Add to local log with size management
     this.errorLog.push(event)
+    this.cleanupOldEvents()
 
     // Send to troubleshooting log for RED and YELLOW diagnostics
     if (severity === Severity.RED || severity === Severity.YELLOW) {
@@ -295,6 +297,26 @@ export class DiagnosticLogger {
   // Clear log (for testing)
   clearLog(): void {
     this.errorLog = []
+  }
+
+  private cleanupOldEvents(): void {
+    if (this.errorLog.length > this.maxLogSize) {
+      const recentEvents = this.errorLog.slice(-Math.floor(this.maxLogSize * 0.8))
+      const criticalEvents = this.errorLog
+        .slice(0, -Math.floor(this.maxLogSize * 0.8))
+        .filter(event => event.severity === Severity.RED)
+      
+      this.errorLog = [...criticalEvents, ...recentEvents]
+    }
+  }
+
+  setMaxLogSize(size: number): void {
+    this.maxLogSize = Math.max(100, size) // Minimum 100 events
+    this.cleanupOldEvents()
+  }
+
+  getLogSize(): number {
+    return this.errorLog.length
   }
 }
 
@@ -424,4 +446,4 @@ export function useDiagnostics() {
 }
 
 // Export the logger instance
-export const diagnosticLogger = DiagnosticLogger.getInstance() 
+export const diagnosticLogger = DiagnosticLogger.getInstance()  
