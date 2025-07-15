@@ -138,7 +138,6 @@ const DiagnosticDashboard = React.memo(function DiagnosticDashboard() {
     const eventCount = diagnosticEvents.length
     diagnosticLogger.clearLog()
     setDiagnosticEvents([])
-    setFilteredEvents([])
     
     // Log the clearing action
     Diagnostics.success(
@@ -404,4 +403,4 @@ const DiagnosticDashboard = React.memo(function DiagnosticDashboard() {
   )
 })
 
-export default DiagnosticDashboard   
+export default DiagnosticDashboard     
