@@ -157,70 +157,51 @@ export class EnhancedBartonSystem {
   }
 
   validateModule(module: ORPTModule): BartonDiagnostic[] {
-    const diagnostics: BartonDiagnostic[] = []
+    const diagnosticIds: string[] = []
 
     // Validate Barton number format
     if (!this.isValidBartonNumber(module.bartonNumber)) {
-      diagnostics.push({
+      const id = this.logDiagnostic({
         principle: BartonPrinciple.SCHEMA_ENFORCEMENT,
         severity: 'error',
         category: 'schema',
         message: `Invalid Barton number format: ${module.bartonNumber}`,
         context: { moduleId: module.id, bartonNumber: module.bartonNumber },
         moduleId: module.id,
-        bartonNumber: module.bartonNumber,
-        escalationLevel: 0,
-        autoResolved: false,
-        requiresManualReview: false
+        bartonNumber: module.bartonNumber
       })
+      diagnosticIds.push(id)
     }
 
     // Validate visual diagram
     if (!module.visualDiagram || !module.visualDiagram.filePath) {
-      diagnostics.push({
+      const id = this.logDiagnostic({
         principle: BartonPrinciple.VISUAL_DOCUMENTATION,
         severity: 'warning',
         category: 'visual',
         message: `Missing visual diagram for module ${module.id}`,
         context: { moduleId: module.id },
         moduleId: module.id,
-        bartonNumber: module.bartonNumber,
-        escalationLevel: 0,
-        autoResolved: false,
-        requiresManualReview: false
+        bartonNumber: module.bartonNumber
       })
+      diagnosticIds.push(id)
     }
 
     // Validate documentation
     if (!module.documentation.markdown || module.documentation.markdown.trim().length < 100) {
-      diagnostics.push({
+      const id = this.logDiagnostic({
         principle: BartonPrinciple.VISUAL_DOCUMENTATION,
         severity: 'warning',
         category: 'orpt',
         message: `Insufficient documentation for module ${module.id}`,
         context: { moduleId: module.id, docLength: module.documentation.markdown?.length || 0 },
         moduleId: module.id,
-        bartonNumber: module.bartonNumber,
-        escalationLevel: 0,
-        autoResolved: false,
-        requiresManualReview: false
+        bartonNumber: module.bartonNumber
       })
+      diagnosticIds.push(id)
     }
 
-    // Log all diagnostics
-    diagnostics.forEach(diagnostic => {
-      this.logDiagnostic({
-        principle: diagnostic.principle,
-        severity: diagnostic.severity,
-        category: diagnostic.category,
-        message: diagnostic.message,
-        context: diagnostic.context,
-        moduleId: diagnostic.moduleId,
-        bartonNumber: diagnostic.bartonNumber
-      })
-    })
-
-    return diagnostics
+    return diagnosticIds.map(id => this.diagnostics.get(id)!).filter(Boolean)
   }
 
   private isValidBartonNumber(bartonNumber: string): boolean {
@@ -323,4 +304,4 @@ export function logBartonEvent(
 export function validateBartonModule(module: ORPTModule): BartonDiagnostic[] {
   const bartonSystem = EnhancedBartonSystem.getInstance()
   return bartonSystem.validateModule(module)
-} 
+}  

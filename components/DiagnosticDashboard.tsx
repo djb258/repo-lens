@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import React from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { 
   DiagnosticEvent, 
   Severity, 
@@ -403,4 +402,4 @@ const DiagnosticDashboard = React.memo(function DiagnosticDashboard() {
   )
 })
 
-export default DiagnosticDashboard     
+export default DiagnosticDashboard       

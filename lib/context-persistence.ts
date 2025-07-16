@@ -1,4 +1,4 @@
-import { Diagnostics } from './diagnostics'
+import { Diagnostics, Altitude, Module, Submodule, Action } from './diagnostics'
 
 // Context Persistence System for Repo Lens
 // Maintains conversation history, user preferences, and session state across LLM sessions
@@ -108,23 +108,23 @@ export class ContextPersistence {
         }
         this.saveContext(defaultContext)
         
-        Diagnostics.info(
-          '30',
-          'CONTEXT',
-          'PERSISTENCE',
-          'INIT',
+        Diagnostics.success(
+          Altitude.SERVICE,
+          Module.UTILS,
+          Submodule.VALIDATION,
+          Action.SUCCESS,
           'Context persistence system initialized with default values',
           { userId: defaultContext.userId }
         )
       }
     } catch (error) {
       Diagnostics.error(
-        '30',
-        'CONTEXT',
-        'PERSISTENCE',
-        'INIT',
+        Altitude.SERVICE,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to initialize context persistence system',
-        error
+        error as Error
       )
     }
   }
@@ -186,11 +186,11 @@ export class ContextPersistence {
 
       this.saveContext(persistentContext)
 
-      Diagnostics.info(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'ADD',
+      Diagnostics.success(
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.SUCCESS,
         'Added conversation context to persistence',
         { 
           sessionId: context.sessionId,
@@ -200,12 +200,12 @@ export class ContextPersistence {
       )
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'ADD',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to add conversation context',
-        error
+        error as Error
       )
     }
   }
@@ -252,12 +252,12 @@ export class ContextPersistence {
         .slice(0, limit)
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'GET_HISTORY',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to get repository history',
-        error
+        error as Error
       )
       return []
     }
@@ -272,12 +272,12 @@ export class ContextPersistence {
       return context.recentRepositories.slice(0, limit)
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'GET_RECENT',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to get recent repositories',
-        error
+        error as Error
       )
       return []
     }
@@ -295,12 +295,12 @@ export class ContextPersistence {
       }
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'GET_PREFERENCES',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to get user preferences',
-        error
+        error as Error
       )
       return {
         preferredAltitude: 30000,
@@ -324,22 +324,22 @@ export class ContextPersistence {
 
       this.saveContext(context)
 
-      Diagnostics.info(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'UPDATE_PREFERENCES',
+      Diagnostics.success(
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.SUCCESS,
         'Updated user preferences',
         { preferences }
       )
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'UPDATE_PREFERENCES',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to update user preferences',
-        error
+        error as Error
       )
     }
   }
@@ -362,11 +362,11 @@ export class ContextPersistence {
       context.customNotes.unshift(note)
       this.saveContext(context)
 
-      Diagnostics.info(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'ADD_NOTE',
+      Diagnostics.success(
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.SUCCESS,
         'Added custom note',
         { noteId, repoPath, tags }
       )
@@ -374,12 +374,12 @@ export class ContextPersistence {
       return noteId
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'ADD_NOTE',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to add custom note',
-        error
+        error as Error
       )
       return ''
     }
@@ -401,12 +401,12 @@ export class ContextPersistence {
         }))
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'GET_NOTES',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to get custom notes',
-        error
+        error as Error
       )
       return []
     }
@@ -466,12 +466,12 @@ export class ContextPersistence {
       return summary
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'GET_SUMMARY',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to generate context summary',
-        error
+        error as Error
       )
       return ''
     }
@@ -484,21 +484,21 @@ export class ContextPersistence {
         localStorage.removeItem(this.storageKey)
       }
       
-      Diagnostics.info(
-        '30',
-        'CONTEXT',
-        'PERSISTENCE',
-        'CLEAR',
+      Diagnostics.success(
+        Altitude.SERVICE,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.SUCCESS,
         'Context persistence cleared'
       )
     } catch (error) {
       Diagnostics.error(
-        '30',
-        'CONTEXT',
-        'PERSISTENCE',
-        'CLEAR',
+        Altitude.SERVICE,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to clear context',
-        error
+        error as Error
       )
     }
   }
@@ -510,12 +510,12 @@ export class ContextPersistence {
       return context ? JSON.stringify(context, null, 2) : ''
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'EXPORT',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to export context',
-        error
+        error as Error
       )
       return ''
     }
@@ -527,11 +527,11 @@ export class ContextPersistence {
       const context = JSON.parse(contextJson) as PersistentContext
       this.saveContext(context)
       
-      Diagnostics.info(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'IMPORT',
+      Diagnostics.success(
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.SUCCESS,
         'Context imported successfully',
         { userId: context.userId }
       )
@@ -539,12 +539,12 @@ export class ContextPersistence {
       return true
     } catch (error) {
       Diagnostics.error(
-        '20',
-        'CONTEXT',
-        'PERSISTENCE',
-        'IMPORT',
+        Altitude.COMPONENT,
+        Module.UTILS,
+        Submodule.VALIDATION,
+        Action.ERROR,
         'Failed to import context',
-        error
+        error as Error
       )
       return false
     }
@@ -552,4 +552,4 @@ export class ContextPersistence {
 }
 
 // Export singleton instance
-export const contextPersistence = ContextPersistence.getInstance() 
+export const contextPersistence = ContextPersistence.getInstance()      
