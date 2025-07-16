@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect } from 'react'
 import BartonDashboard from '@/components/BartonDashboard'
 import Navigation from '@/components/Navigation'
 import { logEnhancedORBTEvent } from '@/lib/enhanced-orbt'
@@ -7,7 +9,7 @@ import { BartonPrinciple } from '@/lib/barton'
 
 export default function BartonDashboardPage() {
   // Log page access for monitoring
-  React.useEffect(() => {
+  useEffect(() => {
     logEnhancedORBTEvent(
       '40.NAVIGATION.dashboard.access',
       Severity.GREEN,
@@ -200,4 +202,4 @@ export default function BartonDashboardPage() {
       </div>
     </div>
   )
-} 
+}      
